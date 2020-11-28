@@ -4,24 +4,27 @@ from processfile import process_text
 
 class TestProcessText(unittest.TestCase):
     def test_process_text_ok(self):
-        inp = "123 456 789\n123 456   789 \n 1\t\t2\t\t3\t\t54\n"
+        inp = "123.01 456 789 69\n123 456   789 69\n 1\t\t2\t\t3\t\t54\n"
         want = [
             {
-                "est_time": 123,
+                "est_time": 123.01,
                 "det_time": 456,
                 "note_start": 789,
+                "midi_note_num": 69,
             },
             {
                 "est_time": 123,
                 "det_time": 456,
                 "note_start": 789,
+                "midi_note_num": 69,
             },
             {
                 "est_time": 1,
                 "det_time": 2,
                 "note_start": 3,
+                "midi_note_num": 54,
             },
-        ]   
+        ]
         got = process_text(inp)
         self.assertEqual(want, got)
 

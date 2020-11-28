@@ -52,8 +52,3 @@ def process_track(
                     }
                 )
     return ret
-
-
-process_midi(
-    r"C:\Users\lhlee\Documents\flippy-fyp\flippy-testbench\midi\wtk1-prelude1.mid"
-)

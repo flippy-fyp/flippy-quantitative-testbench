@@ -14,6 +14,7 @@ def process_midi(midi_path: str) -> List[MIDINoteInfo]:
 
     return ret
 
+
 def process_MidiFile(mid: mido.MidiFile) -> List[MIDINoteInfo]:
     tempo = get_tempo(mid.tracks[0])
     track_midi_note_info_ticks: List[List[MIDINoteInfo]] = [
@@ -26,11 +27,13 @@ def process_MidiFile(mid: mido.MidiFile) -> List[MIDINoteInfo]:
     ret.sort(key=lambda x: x["note_start"])
     return ret
 
+
 def get_tempo(meta_track: mido.midifiles.tracks.MidiTrack) -> int:
     for msg in list(meta_track):
-        if hasattr(msg, 'tempo'):
+        if hasattr(msg, "tempo"):
             return msg.tempo
-    raise ValueError('Cannot get track tempo')
+    raise ValueError("Cannot get track tempo")
+
 
 def process_track(
     track: mido.midifiles.tracks.MidiTrack, ticks_per_beat: int, tempo: int

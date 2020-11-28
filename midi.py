@@ -12,15 +12,13 @@ def process_midi(midi_path: str) -> List[MIDINoteInfo]:
     mid = mido.MidiFile(midi_path)
     ret = process_MidiFile(mid)
 
-    for x in ret:
-        print(x)
     return ret
 
 def process_MidiFile(mid: mido.MidiFile) -> List[MIDINoteInfo]:
     tempo = get_tempo(mid.tracks[0])
     track_midi_note_info_ticks: List[List[MIDINoteInfo]] = [
         process_track(mid.tracks[i], mid.ticks_per_beat, tempo)
-        for i in range(2, len(mid.tracks))
+        for i in range(1, len(mid.tracks))
     ]
     # flatten
     ret: List[MIDINoteInfo] = list(chain.from_iterable(track_midi_note_info_ticks))
@@ -40,6 +38,7 @@ def process_track(
     ret: List[MIDINoteInfo] = []
     curr_tick = 0
     for msg in track:
+        curr_tick += msg.time
         if hasattr(msg, "velocity"):
             if msg.velocity > 0:
                 ret.append(
@@ -49,7 +48,6 @@ def process_track(
                         "midi_note_num": msg.note,
                     }
                 )
-        curr_tick += msg.time
     return ret
 
 

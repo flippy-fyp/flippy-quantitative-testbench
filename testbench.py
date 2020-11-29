@@ -10,7 +10,10 @@ if __name__ == "__main__":
         "--input", type=str, help="Input file of alignment output", required=True
     )
     parser.add_argument(
-        "--midi", type=str, help="Path to reference MIDI file", required=True
+        "--midi", type=str, help="Path to MIDI score file", required=True
+    )
+    parser.add_argument(
+        "--reference", type=str, help="Path to reference result file", required=True
     )
     parser.add_argument(
         "--output",

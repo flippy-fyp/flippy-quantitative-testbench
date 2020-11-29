@@ -6,8 +6,8 @@ from typing import List
 
 class TestProcessMIDI(unittest.TestCase):
     def test_process_midi(self):
-        prelude_midi_file_path = path.join(
-            path.dirname(__file__), "midi", "short_demo.mid"
+        midi_file_path = path.join(
+            path.dirname(__file__), "sample_midis", "short_demo.mid"
         )
         want: List[MIDINoteInfo] = [
             {"midi_note_num": 60, "note_start": 4.882802734375},
@@ -16,5 +16,16 @@ class TestProcessMIDI(unittest.TestCase):
             {"midi_note_num": 64, "note_start": 1505.8563632812497},
             {"midi_note_num": 67, "note_start": 1505.8563632812497},
         ]
-        got = process_midi(prelude_midi_file_path)
+        got = process_midi(midi_file_path)
+        self.assertEqual(want, got)
+
+    def test_process_midi_tracks(self):
+        midi_file_path = path.join(
+            path.dirname(__file__), "sample_midis", "short_demo_chord.mid"
+        )
+        want: List[MIDINoteInfo] = [
+            {"midi_note_num": 60, "note_start": 4.882802734375},
+            {"midi_note_num": 64, "note_start": 4.882802734375},
+        ]
+        got = process_midi(midi_file_path)
         self.assertEqual(want, got)

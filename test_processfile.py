@@ -1,9 +1,9 @@
 import unittest
-from processfile import process_text
+from processfile import process_input_text
 
 
-class TestProcessText(unittest.TestCase):
-    def test_process_text_ok(self):
+class TestProcessInputText(unittest.TestCase):
+    def test_process_input_text_ok(self):
         inp = "123.01 456 789 69\n123 456   789 69\n 1\t\t2\t\t3\t\t54\n"
         want = [
             {
@@ -25,10 +25,10 @@ class TestProcessText(unittest.TestCase):
                 "midi_note_num": 54,
             },
         ]
-        got = process_text(inp)
+        got = process_input_text(inp)
         self.assertEqual(want, got)
 
-    def test_process_text_exception(self):
+    def test_process_input_text_exception(self):
         cases = [
             "123",
             "abc def ghi",
@@ -37,4 +37,4 @@ class TestProcessText(unittest.TestCase):
 
         for c in cases:
             with self.assertRaises(ValueError):
-                process_text(c)
+                process_input_text(c)

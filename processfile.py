@@ -9,13 +9,15 @@ class FollowerOutputLine(TypedDict):
     midi_note_num: int  # 4. MIDI note number in score (int)
 
 
-def process_file(input_file_path: str) -> List[FollowerOutputLine]:
+
+
+def process_input_file(input_file_path: str) -> List[FollowerOutputLine]:
     f = open(input_file_path)
     t = f.read()
-    return process_text(t)
+    return process_input_text(t)
 
 
-def process_text(text: str) -> List[FollowerOutputLine]:
+def process_input_text(text: str) -> List[FollowerOutputLine]:
     def process_line(line: str) -> FollowerOutputLine:
         ls = line.split()
         if len(ls) < 4:
@@ -28,3 +30,6 @@ def process_text(text: str) -> List[FollowerOutputLine]:
         }
 
     return list(map(process_line, text.splitlines()))
+
+def process_ref_file(ref_file_path: str):
+    pass

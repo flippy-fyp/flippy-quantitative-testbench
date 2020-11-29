@@ -1,6 +1,6 @@
 # Flippy Testbench
 
-(Real-time) Musical Score Audio Alignment (Score-following) Testbench.
+(Real-time) Musical Score Audio Alignment (Score-following) Testbench and MIDI-to-Score Creation Tool.
 
 Written based on the [MIREX Score Following](https://www.music-ir.org/mirex/wiki/2006:Score_Following_Proposal) standards.
 
@@ -11,28 +11,27 @@ Read the [paper](./docs/ISMIR2007_p315_cont.pdf).
 - Uses fourth column of alignment output to uniquely identify notes instead of an ID--hence, the fourth column is mandatory instead of optional as in MIREX
 
 ## Usage
+### Requirements
+- Python 3
+- Requirements: `pip install -r requirements.txt`
 
-### Setup
-Requirements: Python 3
-```bash
-pip install -r requirements.txt
-```
+### Testbench
 
-### Usage help
+#### Usage help
 ```bash
 python testbench.py -h
 ```
 
-### Typical usage
+#### Typical usage
 ```bash
 python testbench.py --align <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE> (--output <OUTPUT_RESULT_FILE_PATH>)
 ```
 
-### File formats 
+#### File formats 
 - `<ALIGNMENT_OUTPUT>`: Four columns each line, see `processfile.py::FollowerOutputLine`.
 - `<REFERENCE_RESULT_FILE>`: Three columns each line, see `processfile.py::RefFileLine`.
 
-### Sample Usage
+#### Sample Usage
 ```bash
 $ python testbench.py --align ./samples/sample_scofo.txt --ref ./samples/sample_ref.txt
 {
@@ -47,7 +46,33 @@ $ python testbench.py --align ./samples/sample_scofo.txt --ref ./samples/sample_
 }
 ```
 
-### Unit Tests 
+### MIDI-To-Score Creation Tool
+
+#### Usage help
+```bash
+python midi.py -h
+```
+#### Typical usage
+```bash
+python midi.py --midi <MIDI_PATH> (--output <OUTPUT_SCORE_FILE_PATH>)
+```
+
+#### Output Score Format
+Two columns each line representing note start time (ms, float) and MIDI note number respectively.
+
+#### Sample Usage
+```bash
+$ python midi.py --midi ./sample_midis/short_demo.mid
+4.882802734375 60
+514.6474082031249 62
+1010.2518857421874 64
+1505.8563632812497 64
+1505.8563632812497 67
+```
+
+## Contributing
+
+### Run unit tests
 ```bash
 python -m unittest
 ```

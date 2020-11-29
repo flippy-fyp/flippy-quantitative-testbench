@@ -27,3 +27,8 @@ python testbench.py --input <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE> (--
 ### File formats 
 - `<ALIGNMENT_OUTPUT>`: Four columns each line, see `processfile.py::FollowerOutputLine`.
 - `<REFERENCE_RESULT_FILE>`: Three columns each line, see `processfile.py::RefFileLine`.
+
+### Unit Tests 
+```bash
+python -m unittest
+```

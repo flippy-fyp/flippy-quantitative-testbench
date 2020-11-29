@@ -15,7 +15,8 @@ class MatchResult(TypedDict):
     average_latency: float  # for non-misaligned events: shows the over measure of latency of the system
     average_absolute_offset: float  # for non-misaligned events: shows the reactivity of the follower
     variance_of_error: float  # for non-misaligned events: shows the imprecision or spread of the alignment error
-    average_imprecision: float  # for non-misaligned events: shows the global imprecision (1-this = precision)
+    average_imprecision: float  # for non-misaligned events: shows the global imprecision
+    precision_rate: float  # percentage of correctly detected notes
 
 
 def match(
@@ -26,6 +27,7 @@ def match(
 
     # for non-misaligned events
     errors: List[float] = []
+    non_misaligned_errors: List[float] = []
     latencies: List[float] = []
     offsets: List[float] = []
 
@@ -51,6 +53,7 @@ def match(
             num_misaligned += 1
             continue
 
+        non_misaligned_errors.append(error)
         last_aligned_event_index = idx
 
         # latency of a detection is the difference between the time a detection is made
@@ -64,16 +67,40 @@ def match(
         offset = x["det_time"] - tru_time
         offsets.append(offset)
 
+    last_aligned_event_index = (
+        last_aligned_event_index + 1 if len(non_misaligned_errors) > 0 else 0
+    )
+
     res: MatchResult = {
-        "miss_rate": (float(len(ref)) - len(errors)) / len(ref),
-        "misalign_rate": float(num_misaligned) / len(ref),
-        "piece_completion": float(last_aligned_event_index + 1) / len(ref),
-        "average_latency": float(sum(latencies)) / len(latencies),
-        "average_absolute_offset": float(sum(abs(o) for o in offsets)) / len(offsets),
-        "variance_of_error": np.var(errors),
-        "average_imprecision": float(sum(abs(e) for e in errors)) / len(errors),
+        "miss_rate": safe_div((float(len(ref)) - len(errors)), len(ref)),
+        "misalign_rate": safe_div(float(num_misaligned), len(ref)),
+        "piece_completion": safe_div(float(last_aligned_event_index), len(ref)),
+        "average_latency": safe_div(float(sum(latencies)), len(latencies)),
+        "average_absolute_offset": safe_div(
+            float(sum(abs(o) for o in offsets)), len(offsets)
+        ),
+        "variance_of_error": safe_var(non_misaligned_errors),
+        "average_imprecision": safe_div(
+            float(sum(abs(e) for e in non_misaligned_errors)),
+            len(non_misaligned_errors),
+        ),
+        "precision_rate": safe_div(len(non_misaligned_errors), len(ref)),
     }
     return res
+
+
+def safe_div(a: float, b: int) -> float:
+    # return 0 if denominator is 0
+    if b == 0:
+        return 0.0
+    return a / b
+
+
+def safe_var(l: List[float]) -> float:
+    # return 0 if empty list
+    if len(l) == 0:
+        return 0.0
+    return np.var(l)
 
 
 def preprocess_ref(ls: List[RefFileLine]) -> Dict[Tuple[float, int], Tuple[float, int]]:

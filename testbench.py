@@ -22,7 +22,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    inp = args.input
+    inp = args.align
     ref = args.ref
     out = args.output
 

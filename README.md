@@ -24,7 +24,7 @@ python testbench.py -h
 
 #### Typical usage
 ```bash
-python testbench.py --align <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE> (--output <OUTPUT_RESULT_FILE_PATH>)
+python testbench.py --align <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE>
 ```
 
 #### File formats 
@@ -54,7 +54,7 @@ python midi.py -h
 ```
 #### Typical usage
 ```bash
-python midi.py --midi <MIDI_PATH> (--output <OUTPUT_SCORE_FILE_PATH>)
+python midi.py --midi <MIDI_PATH>
 ```
 
 #### Output Score Format

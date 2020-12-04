@@ -1,12 +1,7 @@
 # Flippy Testbench
 
 (Real-time) Musical Score Audio Alignment (Score-following) Testbench and MIDI-to-Score Creation Tool.
-
-Written based on the [MIREX Score Following](https://www.music-ir.org/mirex/wiki/2006:Score_Following_Proposal) standards.
-
-Read the [paper](./docs/ISMIR2007_p315_cont.pdf).
-
-
+ 
 ## Differences from MIREX evaluation
 - Uses fourth column of alignment output to uniquely identify notes instead of an ID--hence, the fourth column is mandatory instead of optional as in MIREX
 
@@ -24,7 +19,7 @@ python testbench.py -h
 
 #### Typical usage
 ```bash
-python testbench.py --align <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE> (--output <OUTPUT_RESULT_FILE_PATH>)
+python testbench.py --align <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE>
 ```
 
 #### File formats 
@@ -54,7 +49,7 @@ python midi.py -h
 ```
 #### Typical usage
 ```bash
-python midi.py --midi <MIDI_PATH> (--output <OUTPUT_SCORE_FILE_PATH>)
+python midi.py --midi <MIDI_PATH>
 ```
 
 #### Output Score Format
@@ -76,3 +71,8 @@ $ python midi.py --midi ./sample_midis/short_demo.mid
 ```bash
 python -m unittest
 ```
+
+## References
+
+Written based on the [MIREX Score Following](https://www.music-ir.org/mirex/wiki/2006:Score_Following_Proposal) standards and [jthickstun's alignment evaluation implementation](https://github.com/jthickstun/alignment-eval).
+

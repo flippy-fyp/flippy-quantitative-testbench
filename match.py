@@ -12,11 +12,14 @@ class MatchResult(TypedDict):
     miss_rate: float  # percentage of missed score events
     misalign_rate: float  # percentage of misaligned events with absolute error > MISALIGN_THRESHOLD_MS
     piece_completion: float  # percentage of events followed until follower hangs
-    average_latency: float  # for non-misaligned events: shows the over measure of latency of the system
-    average_absolute_offset: float  # for non-misaligned events: shows the reactivity of the follower
-    variance_of_error: float  # for non-misaligned events: shows the imprecision or spread of the alignment error
-    average_imprecision: float  # for non-misaligned events: shows the global imprecision
-    precision_rate: float  # percentage of correctly detected notes
+
+    # for non-misaligned events
+    std_of_error: float
+    mean_absolute_error: float
+    std_of_latency: float
+    mean_latency: float
+    std_of_offset: float
+    mean_absolute_offset: float
 
 
 def match(
@@ -25,9 +28,10 @@ def match(
 ) -> MatchResult:
     num_misaligned = 0
 
-    # for non-misaligned events
     errors: List[float] = []
     non_misaligned_errors: List[float] = []
+
+    # for non-misaligned events
     latencies: List[float] = []
     offsets: List[float] = []
 
@@ -75,18 +79,22 @@ def match(
         "miss_rate": safe_div((float(len(ref)) - len(errors)), len(ref)),
         "misalign_rate": safe_div(float(num_misaligned), len(ref)),
         "piece_completion": safe_div(float(last_aligned_event_index), len(ref)),
-        "average_latency": safe_div(float(sum(latencies)), len(latencies)),
-        "average_absolute_offset": safe_div(
-            float(sum(abs(o) for o in offsets)), len(offsets)
-        ),
-        "variance_of_error": safe_var(non_misaligned_errors),
-        "average_imprecision": safe_div(
-            float(sum(abs(e) for e in non_misaligned_errors)),
-            len(non_misaligned_errors),
-        ),
-        "precision_rate": safe_div(len(non_misaligned_errors), len(ref)),
+        "std_of_error": safe_std(non_misaligned_errors),
+        "mean_absolute_error": mean_abs(non_misaligned_errors),
+        "std_of_latency": safe_std(latencies),
+        "mean_latency": mean(latencies),
+        "std_of_offset": safe_std(offsets),
+        "mean_absolute_offset": mean_abs(offsets),
     }
     return res
+
+
+def mean(l: List[float]) -> float:
+    return safe_div(sum(l), len(l))
+
+
+def mean_abs(l: List[float]) -> float:
+    return safe_div(float(sum(abs(x) for x in l)), len(l))
 
 
 def safe_div(a: float, b: int) -> float:
@@ -96,11 +104,11 @@ def safe_div(a: float, b: int) -> float:
     return a / b
 
 
-def safe_var(l: List[float]) -> float:
+def safe_std(l: List[float]) -> float:
     # return 0 if empty list
     if len(l) == 0:
         return 0.0
-    return np.var(l)
+    return np.std(l)
 
 
 def preprocess_ref(ls: List[RefFileLine]) -> Dict[Tuple[float, int], Tuple[float, int]]:

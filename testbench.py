@@ -14,17 +14,10 @@ if __name__ == "__main__":
     parser.add_argument(
         "--ref", type=str, help="Path to reference result file", required=True
     )
-    parser.add_argument(
-        "--output",
-        type=str,
-        help="Output file of testbench calculation",
-        default="stdout",
-    )
 
     args = parser.parse_args()
     inp = args.align
     ref = args.ref
-    out = args.output
 
     scofo_output = process_input_file(inp)
     ref_contents = process_ref_file(ref)
@@ -32,9 +25,4 @@ if __name__ == "__main__":
     res = match(scofo_output, ref_contents)
     res_str = json.dumps(res, indent=4)
 
-    if out == "stdout":
-        print(res_str)
-    else:
-        f = open(out, "w")
-        f.write(res_str)
-        f.close()
+    print(res_str)

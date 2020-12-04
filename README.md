@@ -2,9 +2,6 @@
 
 (Real-time) Musical Score Audio Alignment (Score-following) Testbench and MIDI-to-Score Creation Tool.
  
-## Differences from MIREX evaluation
-- Uses fourth column of alignment output to uniquely identify notes instead of an ID--hence, the fourth column is mandatory instead of optional as in MIREX
-
 ## Usage
 ### Requirements
 - Python 3
@@ -33,11 +30,12 @@ $ python testbench.py --align ./samples/sample_scofo.txt --ref ./samples/sample_
     "miss_rate": 0.0,
     "misalign_rate": 0.0,
     "piece_completion": 1.0,
-    "average_latency": 0.09999999999999998,
-    "average_absolute_offset": 0.20000000000000007,
-    "variance_of_error": 0.0,
-    "average_imprecision": 0.10000000000000009,
-    "precision_rate": 1.0
+    "std_of_error": 0.0,
+    "mean_absolute_error": 0.10000000000000009,
+    "std_of_latency": 1.1102230246251565e-16,
+    "mean_latency": 0.09999999999999998,
+    "std_of_offset": 1.1102230246251565e-16,
+    "mean_absolute_offset": 0.20000000000000007
 }
 ```
 
@@ -76,3 +74,5 @@ python -m unittest
 
 Written based on the [MIREX Score Following](https://www.music-ir.org/mirex/wiki/2006:Score_Following_Proposal) standards and [jthickstun's alignment evaluation implementation](https://github.com/jthickstun/alignment-eval).
 
+### Differences from MIREX evaluation
+- Uses fourth column of alignment output to uniquely identify notes instead of an ID--hence, the fourth column is mandatory instead of optional as in MIREX

@@ -57,20 +57,16 @@ def process_track(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="MIDI-to-Score Creation Tool."
-    )
-    
-    parser.add_argument(
-        "--midi", type=str, help="Input MIDI file path", required=True
-    )
+    parser = argparse.ArgumentParser(description="MIDI-to-Score Creation Tool.")
+
+    parser.add_argument("--midi", type=str, help="Input MIDI file path", required=True)
 
     args = parser.parse_args()
     midi_path = args.midi
 
     res = process_midi(midi_path)
 
-    res_str = ''
+    res_str = ""
     for r in res:
         res_str += f'{r["note_start"]} {r["midi_note_num"]}\n'
 

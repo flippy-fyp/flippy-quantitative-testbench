@@ -3,6 +3,7 @@ from itertools import groupby, chain
 from typing import List, Dict, Tuple, Optional, TypedDict
 from sharedtypes import NoteInfo
 from processfile import process_score_file
+from utils import eprint
 
 
 class GElem:
@@ -45,7 +46,7 @@ class ASMAligner:
     def get_alignment(self) -> Alignment:
         """
         Gets the optimal alignment
-        """        
+        """
         self._set_up()
         self._solve()
 
@@ -204,8 +205,50 @@ def preprocess_rscore(rscore: List[NoteInfo]) -> List[NoteInfo]:
     # flatten back
     return list(chain.from_iterable(sorted_grouped_par_notes))
 
+
 def print_alignment(alignment: Alignment):
-    pass
+    num_mismatches = 0
+    num_pgaps = 0
+    num_sgaps = 0
+
+    for al in alignment:
+        p = al["p"]
+        s = al["s"]
+
+        if p is None and s is None:
+            raise ValueError("Alignment invalid: p and s both None!")
+
+        if p is not None and s is not None:
+            if p["midi_note_num"] == s["midi_note_num"]:
+                # match
+                print(f'{p["note_start"]} {s["note_start"]} {p["midi_note_num"]}')
+            else:
+                # mismatch
+                num_mismatches += 1
+                print(
+                    f'// MISMATCH: {p["note_start"]} {p["midi_note_num"]} - {s["note_start"]} {s["midi_note_num"]}'
+                )
+
+        if p is None and s is not None:
+            # gap in performance
+            num_pgaps += 1
+            print(
+                f'// GAP: GAP - {s["note_start"]} {s["midi_note_num"]}'
+            )
+        if p is not None and s is None:
+            # gap in score
+            num_sgaps += 1
+            print(
+                f'// GAP: {p["note_start"]} {p["midi_note_num"]} - GAP'
+            )
+            
+    eprint(f"Length of alignment: {len(alignment)}")
+    eprint(f"Total number of gaps: {num_pgaps + num_sgaps}")
+    eprint(f"Total number of mismatches: {num_mismatches}")
+    mistakes = num_mismatches + num_pgaps + num_sgaps
+    eprint(f"Alignment accuracy: {(len(alignment) * 1.0 - mistakes)/len(alignment)}")
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -229,3 +272,5 @@ if __name__ == "__main__":
 
     aligner = ASMAligner(P, S)
     alignment = aligner.get_alignment()
+
+    print_alignment(alignment)

@@ -1,6 +1,6 @@
-# Flippy Testbench
+# Flippy Quantitative Testbench
 
-(Real-time) Musical Score Audio Alignment (Score-following) Testbench and MIDI-to-Score Creation Tool.
+(Real-time) Musical Score Audio Alignment (Score-following) Testbench and utilities.
  
 ## Usage
 ### Requirements
@@ -20,8 +20,8 @@ python testbench.py --align <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE>
 ```
 
 #### File formats 
-- `<ALIGNMENT_OUTPUT>`: Four columns each line, see `processfile.py::FollowerOutputLine`.
-- `<REFERENCE_RESULT_FILE>`: Three columns each line, see `processfile.py::RefFileLine`.
+- `<ALIGNMENT_OUTPUT>`: Four columns each line, see `sharedtypes.py::FollowerOutputLine`.
+- `<REFERENCE_RESULT_FILE>`: Three columns each line, see `sharedtypes.py::RefFileLine`.
 
 #### Sample Usage
 ```bash
@@ -63,6 +63,32 @@ $ python midi.py --midi ./sample_midis/short_demo.mid
 1505.8563632812497 67
 ```
 
+### ASM Score-Aligner 
+Produces testbench reference data from performance and reference scores. Uses a variation of the Needleman-Wunsch algorithm for optimal global alignment. The output follows the `<REFERENCE_RESULT_FILE>` format as per `sharedtypes.py::RefFileLine`. Mismatches and gaps are reported as in the Sample Usage example below.
+
+#### Usage help
+```bash
+python align.py -h
+```
+
+#### Sample Usage
+```bash
+$ python align.py --pscore ./samples/sample_pscore.txt --rscore ./samples/sample_rscore.txt
+10.0 100.0 0
+// GAP: 20.0 1 - GAP
+30.0 200.0 2
+// GAP: GAP - 300.0 3
+40.0 400.0 3
+// MISMATCH: 50.0 0 - 500.0 2
+60.0 600.0 1
+// MISMATCH: 70.0 4 - 700.0 2
+Length of alignment: 8
+Total number of gaps: 2
+Total number of mismatches: 2
+Alignment accuracy: 0.5
+```
+Note that the last four lines are output to `stderr` and that other lines are output to `stdout`.
+
 ## Contributing
 
 ### Run unit tests
@@ -72,7 +98,9 @@ python -m unittest
 
 ## References
 
-Written based on the [MIREX Score Following](https://www.music-ir.org/mirex/wiki/2006:Score_Following_Proposal) standards and [jthickstun's alignment evaluation implementation](https://github.com/jthickstun/alignment-eval).
+Testbench written based on the [MIREX Score Following](https://www.music-ir.org/mirex/wiki/2006:Score_Following_Proposal) standards and [jthickstun's alignment evaluation implementation](https://github.com/jthickstun/alignment-eval).
 
-### Differences from MIREX evaluation
-- Uses fourth column of alignment output to uniquely identify notes instead of an ID--hence, the fourth column is mandatory instead of optional as in MIREX
+See Part II of the [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf) for more information.
+
+<!-- ### Differences from MIREX evaluation
+- Uses fourth column of alignment output to uniquely identify notes instead of an ID--hence, the fourth column is mandatory instead of optional as in MIREX -->

@@ -1,5 +1,5 @@
 import unittest
-from processfile import process_input_text, process_ref_text
+from processfile import process_input_text, process_ref_text, process_score_text
 
 
 class TestProcessInputText(unittest.TestCase):
@@ -64,6 +64,38 @@ class TestProcessRefText(unittest.TestCase):
         self.assertEqual(want, got)
 
     def test_process_ref_text_exception(self):
+        cases = [
+            "123",
+            "abc def ghi",
+            "123 456",
+        ]
+
+        for c in cases:
+            with self.assertRaises(ValueError):
+                process_ref_text(c)
+
+
+class TestProcessScoreFile(unittest.TestCase):
+    def test_process_score_text_ok(self):
+        inp = "123.01 456\n123 456   \n 1\t\t2\t\t3\t\t54\n"
+        want = [
+            {
+                "note_start": 123.01,
+                "midi_note_num": 456,
+            },
+            {
+                "note_start": 123,
+                "midi_note_num": 456,
+            },
+            {
+                "note_start": 1,
+                "midi_note_num": 2,
+            },
+        ]
+        got = process_score_text(inp)
+        self.assertEqual(want, got)
+
+    def test_process_score_text_exception(self):
         cases = [
             "123",
             "abc def ghi",

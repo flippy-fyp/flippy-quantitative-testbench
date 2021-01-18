@@ -1,6 +1,6 @@
 import unittest
 from os import path
-from midi import process_midi, MIDINoteInfo
+from midi import process_midi, NoteInfo
 from typing import List
 
 
@@ -9,7 +9,7 @@ class TestProcessMIDI(unittest.TestCase):
         midi_file_path = path.join(
             path.dirname(__file__), "sample_midis", "short_demo.mid"
         )
-        want: List[MIDINoteInfo] = [
+        want: List[NoteInfo] = [
             {"midi_note_num": 60, "note_start": 4.882802734375},
             {"midi_note_num": 62, "note_start": 514.6474082031249},
             {"midi_note_num": 64, "note_start": 1010.2518857421874},
@@ -23,7 +23,7 @@ class TestProcessMIDI(unittest.TestCase):
         midi_file_path = path.join(
             path.dirname(__file__), "sample_midis", "short_demo_chord.mid"
         )
-        want: List[MIDINoteInfo] = [
+        want: List[NoteInfo] = [
             {"midi_note_num": 60, "note_start": 4.882802734375},
             {"midi_note_num": 64, "note_start": 4.882802734375},
         ]

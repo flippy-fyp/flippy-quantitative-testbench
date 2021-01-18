@@ -3,28 +3,24 @@ import argparse
 import json
 from itertools import chain
 from typing import TypedDict, List, Any
+from sharedtypes import NoteInfo
 
 
-class MIDINoteInfo(TypedDict):
-    note_start: float  # note start time (ms)
-    midi_note_num: int  # MIDI note number
-
-
-def process_midi(midi_path: str) -> List[MIDINoteInfo]:
+def process_midi(midi_path: str) -> List[NoteInfo]:
     mid = mido.MidiFile(midi_path)
     ret = process_MidiFile(mid)
 
     return ret
 
 
-def process_MidiFile(mid: mido.MidiFile) -> List[MIDINoteInfo]:
+def process_MidiFile(mid: mido.MidiFile) -> List[NoteInfo]:
     tempo = get_tempo(mid.tracks[0])
-    track_midi_note_info_ticks: List[List[MIDINoteInfo]] = [
+    track_midi_note_info_ticks: List[List[NoteInfo]] = [
         process_track(mid.tracks[i], mid.ticks_per_beat, tempo)
         for i in range(1, len(mid.tracks))
     ]
     # flatten
-    ret: List[MIDINoteInfo] = list(chain.from_iterable(track_midi_note_info_ticks))
+    ret: List[NoteInfo] = list(chain.from_iterable(track_midi_note_info_ticks))
     # sort
     ret.sort(key=lambda x: x["note_start"])
     return ret
@@ -39,8 +35,8 @@ def get_tempo(meta_track: mido.midifiles.tracks.MidiTrack) -> int:
 
 def process_track(
     track: mido.midifiles.tracks.MidiTrack, ticks_per_beat: int, tempo: int
-) -> List[MIDINoteInfo]:
-    ret: List[MIDINoteInfo] = []
+) -> List[NoteInfo]:
+    ret: List[NoteInfo] = []
     curr_tick = 0
     for msg in track:
         curr_tick += msg.time

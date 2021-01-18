@@ -1,18 +1,5 @@
 from typing import NewType, List, Tuple, TypedDict
-
-
-# https://www.music-ir.org/mirex/wiki/2018:Real-time_Audio_to_Score_Alignment_(a.k.a_Score_Following)
-class FollowerOutputLine(TypedDict):
-    est_time: float  # 1. estimated note onset time in performance audio file (ms)
-    det_time: float  # 2. detection time relative to performance audio file (ms)
-    note_start: float  # 3. note start time in score (ms)
-    midi_note_num: int  # 4. MIDI note number in score (int)
-
-
-class RefFileLine(TypedDict):
-    tru_time: float  # true note onset time in performance audio file (ms)
-    note_start: float  # note start time in score (ms)
-    midi_note_num: int  # MIDI note number in score (int)
+from sharedtypes import RefFileLine, NoteInfo, FollowerOutputLine
 
 
 def process_input_file(input_file_path: str) -> List[FollowerOutputLine]:
@@ -52,5 +39,21 @@ def process_ref_text(text: str) -> List[RefFileLine]:
             "note_start": float(ls[1]),
             "midi_note_num": int(ls[2]),
         }
+
+    return list(map(process_line, text.splitlines()))
+
+
+def process_score_file(score_file_path: str) -> List[NoteInfo]:
+    f = open(score_file_path)
+    t = f.read()
+    return process_score_text(t)
+
+
+def process_score_text(text: str) -> List[NoteInfo]:
+    def process_line(line: str) -> NoteInfo:
+        ls = line.split()
+        if len(ls) < 2:
+            raise ValueError(f"Too few entries on line: {line}")
+        return {"note_start": float(ls[0]), "midi_note_num": int(ls[1])}
 
     return list(map(process_line, text.splitlines()))

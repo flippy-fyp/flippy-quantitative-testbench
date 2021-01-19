@@ -72,7 +72,7 @@ python musicxml.py
 
 #### Sample Usage
 ```bash
-$ python musicxml.py --input ./data/bwv846/prelude.mxl        
+$ python musicxml.py --input ./data/sample_musicxmls/prelude.mxl        
 0.0 60
 208.33325 64
 416.6665 67

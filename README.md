@@ -25,7 +25,7 @@ python testbench.py --align <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE>
 
 #### Sample Usage
 ```bash
-$ python testbench.py --align ./samples/sample_scofo.txt --ref ./samples/sample_ref.txt
+$ python testbench.py --align ./data/sample_txt/sample_scofo.txt --ref ./data/sample_txt/sample_ref.txt
 {
     "miss_rate": 0.0,
     "misalign_rate": 0.0,
@@ -55,7 +55,7 @@ Two columns each line representing note start time (ms, float) and MIDI note num
 
 #### Sample Usage
 ```bash
-$ python midi.py --midi ./sample_midis/short_demo.mid
+$ python midi.py --midi ./data/sample_midis/short_demo.mid
 4.882802734375 60
 514.6474082031249 62
 1010.2518857421874 64
@@ -72,7 +72,7 @@ python musicxml.py
 
 #### Sample Usage
 ```bash
-$ python musicxml.py --input ./sample_musicxmls/prelude.mxl        
+$ python musicxml.py --input ./data/sample_musicxmls/prelude.mxl        
 0.0 60
 208.33325 64
 416.6665 67
@@ -94,7 +94,7 @@ python align.py -h
 
 #### Sample Usage
 ```bash
-$ python align.py --pscore ./samples/sample_pscore.txt --rscore ./samples/sample_rscore.txt
+$ python align.py --pscore ./data/sample_txt/sample_pscore.txt --rscore ./data/sample_txt/sample_rscore.txt
 10.0 100.0 0
 // GAP: 20.0 1 - GAP
 30.0 200.0 2

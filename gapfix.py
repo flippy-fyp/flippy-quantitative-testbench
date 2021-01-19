@@ -1,4 +1,4 @@
-from align import Alignment
+from sharedtypes import Alignment
 from typing import Optional, List
 from copy import deepcopy
 

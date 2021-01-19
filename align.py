@@ -4,6 +4,7 @@ from typing import List, Dict, Tuple, Optional, TypedDict
 from sharedtypes import NoteInfo, Alignment
 from processfile import process_score_file
 from utils import eprint
+from gapfix import GapFixer
 
 
 class GElem:
@@ -246,10 +247,20 @@ if __name__ == "__main__":
     parser.add_argument(
         "--rscore", type=str, help="Path to reference score", required=True
     )
+    parser.add_argument(
+        "--fixgaps", type=bool, help="Automatically fix matching gaps with fixgapsthres threshold."
+        +" Useful for pieces with strong polyphony. Warning: perturbs score data!", default=True
+    )
+    parser.add_argument(
+        "--fixgapsthres", type=float, help="Threshold (in ms) to fix gaps. Total distance in score time to look backwards/forwards"+
+        "for a matching gap", default=50
+    )
 
     args = parser.parse_args()
     pscore_path = args.pscore
     rscore_path = args.rscore
+    fixgaps = args.fixgaps
+    fixgapsthres = args.fixgapsthres
 
     P = process_score_file(pscore_path)
     S = preprocess_rscore(process_score_file(rscore_path))
@@ -257,4 +268,8 @@ if __name__ == "__main__":
     aligner = ASMAligner(P, S)
     alignment = aligner.get_alignment()
 
+    if fixgaps:
+        gf = GapFixer(alignment, fixgapsthres)
+        alignment = gf.fix_gaps()
+    
     print_alignment(alignment)

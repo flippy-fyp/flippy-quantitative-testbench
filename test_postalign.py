@@ -55,6 +55,74 @@ class TestMismatchFixer(unittest.TestCase):
                     },
                 ],
             ),
+            # swapped within threshold, closest swapped
+            (
+                [
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 15,
+                            "midi_note_num": 20,
+                        },
+                        "s": {
+                            "note_start": 25,
+                            "midi_note_num": 10,
+                        },
+                    },
+                ],
+                50,
+                [
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 25,
+                            "midi_note_num": 10,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 15,
+                            "midi_note_num": 20,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                ],
+            ),
             # unswapped outside threshold
             (
                 [

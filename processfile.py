@@ -4,7 +4,7 @@ from sharedtypes import RefFileLine, NoteInfo, FollowerOutputLine
 
 def process_input_file(input_file_path: str) -> List[FollowerOutputLine]:
     f = open(input_file_path)
-    t = f.read()
+    t = f.read().strip()
     return process_input_text(t)
 
 
@@ -25,7 +25,7 @@ def process_input_text(text: str) -> List[FollowerOutputLine]:
 
 def process_ref_file(ref_file_path: str) -> List[RefFileLine]:
     f = open(ref_file_path)
-    t = f.read()
+    t = f.read().strip()
     return process_ref_text(t)
 
 
@@ -45,7 +45,7 @@ def process_ref_text(text: str) -> List[RefFileLine]:
 
 def process_score_file(score_file_path: str) -> List[NoteInfo]:
     f = open(score_file_path)
-    t = f.read()
+    t = f.read().strip()
     return process_score_text(t)
 
 

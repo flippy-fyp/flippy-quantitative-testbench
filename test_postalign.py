@@ -1,10 +1,10 @@
 import unittest
 from typing import List, Tuple
 from sharedtypes import Alignment
-from postalign import GapFixer, MismatchFixer
+from postalign import PostAlign
 
 
-class TestMismatchFixer(unittest.TestCase):
+class TestPostAlign(unittest.TestCase):
     def test_fix_mismatches(self):
         cases: List[Tuple[Alignment, float, Alignment]] = [
             # swapped within threshold
@@ -241,12 +241,10 @@ class TestMismatchFixer(unittest.TestCase):
             ),
         ]
         for alignment, threshold_ms, want in cases:
-            mf = MismatchFixer(alignment, threshold_ms)
-            got = mf.fix_mismatches()
+            pa = PostAlign(alignment, threshold_ms)
+            got = pa.postalign()
             self.assertEqual(want, got)
 
-
-class TestGapFixer(unittest.TestCase):
     def test_fix_gaps(self):
         cases: List[Tuple[Alignment, float, Alignment]] = [
             # match and mismatch not cared
@@ -631,7 +629,7 @@ class TestGapFixer(unittest.TestCase):
                     },
                 ],
             ),
-            # match backwards first
+            # match closest first
             (
                 [
                     {
@@ -647,7 +645,7 @@ class TestGapFixer(unittest.TestCase):
                             "midi_note_num": 67,
                         },
                         "s": {
-                            "note_start": 6500,
+                            "note_start": 7980,
                             "midi_note_num": 67,
                         },
                     },
@@ -679,12 +677,19 @@ class TestGapFixer(unittest.TestCase):
                 50.0,
                 [
                     {
+                        "p": None,
+                        "s": {
+                            "note_start": 6469,
+                            "midi_note_num": 64,
+                        },
+                    },
+                    {
                         "p": {
                             "note_start": 7780,
                             "midi_note_num": 67,
                         },
                         "s": {
-                            "note_start": 6500,
+                            "note_start": 7980,
                             "midi_note_num": 67,
                         },
                     },
@@ -694,7 +699,7 @@ class TestGapFixer(unittest.TestCase):
                             "midi_note_num": 64,
                         },
                         "s": {
-                            "note_start": 6469,
+                            "note_start": 8000,
                             "midi_note_num": 64,
                         },
                     },
@@ -708,11 +713,81 @@ class TestGapFixer(unittest.TestCase):
                             "midi_note_num": 67,
                         },
                     },
+                ],
+            ),
+        ]
+
+        for alignment, threshold_ms, want in cases:
+            pa = PostAlign(alignment, threshold_ms)
+            got = pa.postalign()
+            self.assertEqual(want, got)
+
+    def test_fix_reverse_mismatch(self):
+        # tests for cases that requires reverse processing
+        cases: List[Tuple[Alignment, float, Alignment]] = [
+            (
+                [
                     {
-                        "p": None,
+                        "p": {
+                            "note_start": 78522.5,
+                            "midi_note_num": 46,
+                        },
                         "s": {
-                            "note_start": 8000,
-                            "midi_note_num": 64,
+                            "note_start": 63000,
+                            "midi_note_num": 45,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 78536,
+                            "midi_note_num": 69,
+                        },
+                        "s": {
+                            "note_start": 63001,
+                            "midi_note_num": 69,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 79161.667,
+                            "midi_note_num": 45,
+                        },
+                        "s": {
+                            "note_start": 63002,
+                            "midi_note_num": 43,
+                        },
+                    },
+                ],
+                50.0,
+                [
+                    {
+                        "p": {
+                            "note_start": 78522.5,
+                            "midi_note_num": 46,
+                        },
+                        "s": {
+                            "note_start": 63002,
+                            "midi_note_num": 43,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 78536,
+                            "midi_note_num": 69,
+                        },
+                        "s": {
+                            "note_start": 63001,
+                            "midi_note_num": 69,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 79161.667,
+                            "midi_note_num": 45,
+                        },
+                        "s": {
+                            "note_start": 63000,
+                            "midi_note_num": 45,
                         },
                     },
                 ],
@@ -720,6 +795,67 @@ class TestGapFixer(unittest.TestCase):
         ]
 
         for alignment, threshold_ms, want in cases:
-            gf = GapFixer(alignment, threshold_ms)
-            got = gf.fix_gaps()
+            pa = PostAlign(alignment, threshold_ms)
+            got = pa.postalign()
+            self.assertEqual(want, got)
+
+    def test_fix_reverse_gap(self):
+        # tests for cases that requires reverse processing
+        cases: List[Tuple[Alignment, float, Alignment]] = [
+            (
+                [
+                    {
+                        "p": None,
+                        "s": {
+                            "note_start": 37250,
+                            "midi_note_num": 60,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 45309.167,
+                            "midi_note_num": 78,
+                        },
+                        "s": {
+                            "note_start": 37250,
+                            "midi_note_num": 78,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 45646.667,
+                            "midi_note_num": 60,
+                        },
+                        "s": None,
+                    },
+                ],
+                50.0,
+                [
+                    {
+                        "p": {
+                            "note_start": 45309.167,
+                            "midi_note_num": 78,
+                        },
+                        "s": {
+                            "note_start": 37250,
+                            "midi_note_num": 78,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 45646.667,
+                            "midi_note_num": 60,
+                        },
+                        "s": {
+                            "note_start": 37250,
+                            "midi_note_num": 60,
+                        },
+                    },
+                ],
+            ),
+        ]
+        for alignment, threshold_ms, want in cases:
+            pa = PostAlign(alignment, threshold_ms)
+            got = pa.postalign()
+            print(got)
             self.assertEqual(want, got)

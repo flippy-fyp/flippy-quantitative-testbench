@@ -4,7 +4,7 @@ from typing import List, Dict, Tuple, Optional, TypedDict
 from sharedtypes import NoteInfo, Alignment
 from processfile import process_score_file
 from utils import eprint
-from postalign import GapFixer, MismatchFixer
+from postalign import PostAlign
 
 
 class GElem:
@@ -230,7 +230,7 @@ def print_alignment(alignment: Alignment):
         if p is not None and s is None:
             # gap in score
             num_sgaps += 1
-            print(f'// GAP: {p["note_start"]} {p["midi_note_num"]:.3f} - GAP')
+            print(f'// GAP: {p["note_start"]:.3f} {p["midi_note_num"]} - GAP')
 
     eprint(f"Length of alignment: {len(alignment)}")
     eprint(f"Total number of gaps: {num_pgaps + num_sgaps}")
@@ -250,29 +250,19 @@ if __name__ == "__main__":
         "--rscore", type=str, help="Path to reference score", required=True
     )
     parser.add_argument(
-        "--fixmismatchthres",
+        "--postalignthres",
         type=float,
-        help="Threshold (in ms) to fix mismatches. Enabled if >= 0"
-        + "Total distance in score time to look forwards "
-        + "for a opposite mismatch. "
-        + " Useful for pieces with strong polyphony.",
-        default=0,
-    )
-    parser.add_argument(
-        "--fixgapsthres",
-        type=float,
-        help="Threshold (in ms) to fix gaps. Enabled if >= 0"
+        help="Threshold (in ms) to run postalignment fixes. Enabled if >= 0. "
         + "Total distance in score time to look backwards/forwards "
         + "for a matching gap. "
-        + " Useful for pieces with strong polyphony. Warning: perturbs score data!",
+        + "Useful for pieces with strong polyphony. Warning: perturbs score data!",
         default=0,
     )
 
     args = parser.parse_args()
     pscore_path = args.pscore
     rscore_path = args.rscore
-    fixgapsthres = args.fixgapsthres
-    fixmismatchthres = args.fixmismatchthres
+    postalignthres = args.postalignthres
 
     P = process_score_file(pscore_path)
     S = preprocess_rscore(process_score_file(rscore_path))
@@ -280,14 +270,9 @@ if __name__ == "__main__":
     aligner = ASMAligner(P, S)
     alignment = aligner.get_alignment()
 
-    if fixmismatchthres >= 0:
-        eprint(f"Fixing mismatches with threshold {fixmismatchthres}")
-        mf = MismatchFixer(alignment, fixmismatchthres)
-        alignment = mf.fix_mismatches()
-
-    if fixgapsthres >= 0:
-        eprint(f"Fixing gaps with threshold {fixgapsthres}")
-        gf = GapFixer(alignment, fixgapsthres)
-        alignment = gf.fix_gaps()
+    if postalignthres >= 0:
+        eprint(f"Running PostAlign with threshold {postalignthres}")
+        pa = PostAlign(alignment, postalignthres)
+        alignment = pa.postalign()
 
     print_alignment(alignment)

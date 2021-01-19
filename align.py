@@ -1,7 +1,7 @@
 import argparse
 from itertools import groupby, chain
 from typing import List, Dict, Tuple, Optional, TypedDict
-from sharedtypes import NoteInfo
+from sharedtypes import NoteInfo, Alignment
 from processfile import process_score_file
 from utils import eprint
 
@@ -23,15 +23,6 @@ class GElem:
         for k, v in kwargs.items():
             assert k in self.__class__.__allowed
             setattr(self, k, v)
-
-
-class AlignmentElem(TypedDict):
-    # if gap in either, value is None
-    p: Optional[NoteInfo]  # note in performance
-    s: Optional[NoteInfo]  # note in score
-
-
-Alignment = List[AlignmentElem]
 
 
 class ASMAligner:

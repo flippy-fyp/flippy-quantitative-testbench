@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypedDict, Optional, List
 
 class NoteInfo(TypedDict):
     note_start: float  # note start time (ms)
@@ -15,3 +15,12 @@ class FollowerOutputLine(TypedDict):
     det_time: float  # 2. detection time relative to performance audio file (ms)
     note_start: float  # 3. note start time in score (ms)
     midi_note_num: int  # 4. MIDI note number in score (int)
+
+class AlignmentElem(TypedDict):
+    # if gap in either, value is None
+    p: Optional[NoteInfo]  # note in performance
+    s: Optional[NoteInfo]  # note in score
+
+
+Alignment = List[AlignmentElem]
+

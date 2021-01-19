@@ -53,7 +53,7 @@ def process_track(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="MIDI-to-Score Creation Tool.")
+    parser = argparse.ArgumentParser(description="MIDI to Score Creation Tool.")
 
     parser.add_argument("--midi", type=str, help="Input MIDI file path", required=True)
 

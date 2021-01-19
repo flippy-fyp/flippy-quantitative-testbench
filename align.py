@@ -232,22 +232,15 @@ def print_alignment(alignment: Alignment):
         if p is None and s is not None:
             # gap in performance
             num_pgaps += 1
-            print(
-                f'// GAP: GAP - {s["note_start"]} {s["midi_note_num"]}'
-            )
+            print(f'// GAP: GAP - {s["note_start"]} {s["midi_note_num"]}')
         if p is not None and s is None:
             # gap in score
             num_sgaps += 1
-            print(
-                f'// GAP: {p["note_start"]} {p["midi_note_num"]} - GAP'
-            )
-            
+            print(f'// GAP: {p["note_start"]} {p["midi_note_num"]} - GAP')
+
     eprint(f"Length of alignment: {len(alignment)}")
     eprint(f"Total number of gaps: {num_pgaps + num_sgaps}")
     eprint(f"Total number of mismatches: {num_mismatches}")
-    mistakes = num_mismatches + num_pgaps + num_sgaps
-    eprint(f"Alignment accuracy: {(len(alignment) * 1.0 - mistakes)/len(alignment)}")
-
 
 
 if __name__ == "__main__":

@@ -39,7 +39,7 @@ $ python testbench.py --align ./samples/sample_scofo.txt --ref ./samples/sample_
 }
 ```
 
-### MIDI-To-Score Creation Tool
+### MIDI to Score Creation Tool
 
 #### Usage help
 ```bash
@@ -61,6 +61,27 @@ $ python midi.py --midi ./sample_midis/short_demo.mid
 1010.2518857421874 64
 1505.8563632812497 64
 1505.8563632812497 67
+```
+
+### MusicXML to MIDI/Score Converter 
+
+#### Usage help
+```bash
+python musicxml.py
+```
+
+#### Sample Usage
+```bash
+$ python musicxml.py --input ./sample_musicxmls/prelude.mxl        
+0.0 60
+208.33325 64
+416.6665 67
+624.99975 72
+833.333 76
+1041.66625 67
+1249.9995 72
+1458.33275 76
+...
 ```
 
 ### ASM Score-Aligner 
@@ -85,9 +106,8 @@ $ python align.py --pscore ./samples/sample_pscore.txt --rscore ./samples/sample
 Length of alignment: 8
 Total number of gaps: 2
 Total number of mismatches: 2
-Alignment accuracy: 0.5
 ```
-Note that the last four lines are output to `stderr` and that other lines are output to `stdout`.
+Note that the last three lines are output to `stderr` and that other lines are output to `stdout`.
 
 ## Contributing
 

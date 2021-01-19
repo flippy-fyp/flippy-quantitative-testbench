@@ -1,4 +1,4 @@
-from typing import NewType, List, Tuple, TypedDict
+from typing import NewType, List, Tuple, TypedDict, Optional
 from sharedtypes import RefFileLine, NoteInfo, FollowerOutputLine
 
 
@@ -30,7 +30,11 @@ def process_ref_file(ref_file_path: str) -> List[RefFileLine]:
 
 
 def process_ref_text(text: str) -> List[RefFileLine]:
-    def process_line(line: str) -> RefFileLine:
+    def process_line(line: str) -> Optional[RefFileLine]:
+        # ignore lines starting with //
+        line = line.strip()
+        if len(line) >= 2 and line[:2] == "//":
+            return None
         ls = line.split()
         if len(ls) < 3:
             raise ValueError(f"Too few entries on line: {line}")
@@ -40,7 +44,8 @@ def process_ref_text(text: str) -> List[RefFileLine]:
             "midi_note_num": int(ls[2]),
         }
 
-    return list(map(process_line, text.splitlines()))
+    lines = list(map(process_line, text.splitlines()))
+    return [x for x in lines if x is not None]
 
 
 def process_score_file(score_file_path: str) -> List[NoteInfo]:

@@ -857,5 +857,4 @@ class TestPostAlign(unittest.TestCase):
         for alignment, threshold_ms, want in cases:
             pa = PostAlign(alignment, threshold_ms)
             got = pa.postalign()
-            print(got)
             self.assertEqual(want, got)

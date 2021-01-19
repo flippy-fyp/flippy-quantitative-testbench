@@ -42,7 +42,7 @@ class TestProcessInputText(unittest.TestCase):
 
 class TestProcessRefText(unittest.TestCase):
     def test_process_ref_text_ok(self):
-        inp = "123.01 456 69\n123 456   69\n 1\t\t2\t\t3\t\t54\n"
+        inp = "123.01 456 69\n123 456   69\n 1\t\t2\t\t3\t\t54\n\t//lol\n// 123 123 123"
         want = [
             {
                 "tru_time": 123.01,

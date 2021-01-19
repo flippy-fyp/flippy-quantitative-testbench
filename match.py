@@ -44,6 +44,7 @@ def match(
 
         if t not in ref_p:
             # reporting events not in the score should not be possible--ignoring here
+            # ref may also not contain all notes -- give the follower the benefit of the doubt
             continue
 
         tru_time, idx = ref_p[t]

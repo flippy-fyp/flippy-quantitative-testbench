@@ -41,7 +41,7 @@ def process_track(
     for msg in track:
         curr_tick += msg.time
         if hasattr(msg, "velocity"):
-            if msg.velocity > 0:
+            if msg.velocity > 0 and msg.type == 'note_on':
                 ret.append(
                     {
                         "note_start": mido.tick2second(curr_tick, ticks_per_beat, tempo)
@@ -62,8 +62,5 @@ if __name__ == "__main__":
 
     res = process_midi(midi_path)
 
-    res_str = ""
     for r in res:
-        res_str += f'{r["note_start"]} {r["midi_note_num"]}\n'
-
-    print(res_str)
+        print(f'{r["note_start"]:.3f} {r["midi_note_num"]}')

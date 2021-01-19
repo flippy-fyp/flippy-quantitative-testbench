@@ -4,7 +4,7 @@ from typing import List, Dict, Tuple, Optional, TypedDict
 from sharedtypes import NoteInfo, Alignment
 from processfile import process_score_file
 from utils import eprint
-from gapfix import GapFixer
+from postalign import GapFixer, MismatchFixer
 
 
 class GElem:
@@ -213,22 +213,24 @@ def print_alignment(alignment: Alignment):
         if p is not None and s is not None:
             if p["midi_note_num"] == s["midi_note_num"]:
                 # match
-                print(f'{p["note_start"]} {s["note_start"]} {p["midi_note_num"]}')
+                print(
+                    f'{p["note_start"]:.3f} {s["note_start"]:.3f} {p["midi_note_num"]}'
+                )
             else:
                 # mismatch
                 num_mismatches += 1
                 print(
-                    f'// MISMATCH: {p["note_start"]} {p["midi_note_num"]} - {s["note_start"]} {s["midi_note_num"]}'
+                    f'// MISMATCH: {p["note_start"]:.3f} {p["midi_note_num"]} - {s["note_start"]:.3f} {s["midi_note_num"]}'
                 )
 
         if p is None and s is not None:
             # gap in performance
             num_pgaps += 1
-            print(f'// GAP: GAP - {s["note_start"]} {s["midi_note_num"]}')
+            print(f'// GAP: GAP - {s["note_start"]:.3f} {s["midi_note_num"]}')
         if p is not None and s is None:
             # gap in score
             num_sgaps += 1
-            print(f'// GAP: {p["note_start"]} {p["midi_note_num"]} - GAP')
+            print(f'// GAP: {p["note_start"]} {p["midi_note_num"]:.3f} - GAP')
 
     eprint(f"Length of alignment: {len(alignment)}")
     eprint(f"Total number of gaps: {num_pgaps + num_sgaps}")
@@ -248,19 +250,29 @@ if __name__ == "__main__":
         "--rscore", type=str, help="Path to reference score", required=True
     )
     parser.add_argument(
-        "--fixgaps", type=bool, help="Automatically fix matching gaps with fixgapsthres threshold."
-        +" Useful for pieces with strong polyphony. Warning: perturbs score data!", default=True
+        "--fixmismatchthres",
+        type=float,
+        help="Threshold (in ms) to fix mismatches. Enabled if >= 0"
+        + "Total distance in score time to look forwards "
+        + "for a opposite mismatch. "
+        + " Useful for pieces with strong polyphony.",
+        default=0,
     )
     parser.add_argument(
-        "--fixgapsthres", type=float, help="Threshold (in ms) to fix gaps. Total distance in score time to look backwards/forwards"+
-        "for a matching gap", default=50
+        "--fixgapsthres",
+        type=float,
+        help="Threshold (in ms) to fix gaps. Enabled if >= 0"
+        + "Total distance in score time to look backwards/forwards "
+        + "for a matching gap. "
+        + " Useful for pieces with strong polyphony. Warning: perturbs score data!",
+        default=0,
     )
 
     args = parser.parse_args()
     pscore_path = args.pscore
     rscore_path = args.rscore
-    fixgaps = args.fixgaps
     fixgapsthres = args.fixgapsthres
+    fixmismatchthres = args.fixmismatchthres
 
     P = process_score_file(pscore_path)
     S = preprocess_rscore(process_score_file(rscore_path))
@@ -268,8 +280,14 @@ if __name__ == "__main__":
     aligner = ASMAligner(P, S)
     alignment = aligner.get_alignment()
 
-    if fixgaps:
+    if fixmismatchthres >= 0:
+        eprint(f"Fixing mismatches with threshold {fixmismatchthres}")
+        mf = MismatchFixer(alignment, fixmismatchthres)
+        alignment = mf.fix_mismatches()
+
+    if fixgapsthres >= 0:
+        eprint(f"Fixing gaps with threshold {fixgapsthres}")
         gf = GapFixer(alignment, fixgapsthres)
         alignment = gf.fix_gaps()
-    
+
     print_alignment(alignment)

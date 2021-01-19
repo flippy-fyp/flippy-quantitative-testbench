@@ -62,8 +62,5 @@ if __name__ == "__main__":
 
     res = process_midi(midi_path)
 
-    res_str = ""
     for r in res:
-        res_str += f'{r["note_start"]} {r["midi_note_num"]}\n'
-
-    print(res_str)
+        print(f'{r["note_start"]:.3f} {r["midi_note_num"]}')

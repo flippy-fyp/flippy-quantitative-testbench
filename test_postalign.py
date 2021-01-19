@@ -1,7 +1,182 @@
 import unittest
 from typing import List, Tuple
 from sharedtypes import Alignment
-from gapfix import GapFixer
+from postalign import GapFixer, MismatchFixer
+
+
+class TestMismatchFixer(unittest.TestCase):
+    def test_fix_mismatches(self):
+        cases: List[Tuple[Alignment, float, Alignment]] = [
+            # swapped within threshold
+            (
+                [
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 15,
+                            "midi_note_num": 20,
+                        },
+                        "s": {
+                            "note_start": 25,
+                            "midi_note_num": 10,
+                        },
+                    },
+                ],
+                50,
+                [
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 25,
+                            "midi_note_num": 10,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 15,
+                            "midi_note_num": 20,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                ],
+            ),
+            # unswapped outside threshold
+            (
+                [
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 15,
+                            "midi_note_num": 20,
+                        },
+                        "s": {
+                            "note_start": 125,
+                            "midi_note_num": 10,
+                        },
+                    },
+                ],
+                50,
+                [
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 15,
+                            "midi_note_num": 20,
+                        },
+                        "s": {
+                            "note_start": 125,
+                            "midi_note_num": 10,
+                        },
+                    },
+                ],
+            ),
+            # swapped, note in middle
+            (
+                [
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 69,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 69,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 15,
+                            "midi_note_num": 20,
+                        },
+                        "s": {
+                            "note_start": 25,
+                            "midi_note_num": 10,
+                        },
+                    },
+                ],
+                50,
+                [
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 10,
+                        },
+                        "s": {
+                            "note_start": 25,
+                            "midi_note_num": 10,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 10,
+                            "midi_note_num": 69,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 69,
+                        },
+                    },
+                    {
+                        "p": {
+                            "note_start": 15,
+                            "midi_note_num": 20,
+                        },
+                        "s": {
+                            "note_start": 20,
+                            "midi_note_num": 20,
+                        },
+                    },
+                ],
+            ),
+        ]
+        for alignment, threshold_ms, want in cases:
+            mf = MismatchFixer(alignment, threshold_ms)
+            got = mf.fix_mismatches()
+            self.assertEqual(want, got)
+
 
 class TestGapFixer(unittest.TestCase):
     def test_fix_gaps(self):
@@ -112,7 +287,7 @@ class TestGapFixer(unittest.TestCase):
                     },
                 ],
             ),
-            # unmatched gap backwards 
+            # unmatched gap backwards
             (
                 [
                     {
@@ -475,7 +650,7 @@ class TestGapFixer(unittest.TestCase):
                 ],
             ),
         ]
-    
+
         for alignment, threshold_ms, want in cases:
             gf = GapFixer(alignment, threshold_ms)
             got = gf.fix_gaps()

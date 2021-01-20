@@ -3,9 +3,7 @@ from refscore import process_notes
 import argparse
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Score to MIDI Creation Tool."
-    )
+    parser = argparse.ArgumentParser(description="Score to MIDI Creation Tool.")
 
     parser.add_argument(
         "--input", type=str, help="Input Score file path", required=True

@@ -6,13 +6,17 @@ from typing import List, Tuple
 BPM = 120
 TICKS_PER_BEAT = 48
 
+
 def ms_to_tick_gap_and_note_off(
     notes: List[Tuple[float, int]]
 ) -> List[Tuple[int, int]]:
     res: List[Tuple[int, int]] = []
     # first convert to absolute ticks
     notes_ticks = [
-        (int(second2tick(tru_time / 1000, TICKS_PER_BEAT, bpm2tempo(BPM))), midi_note_num)
+        (
+            int(second2tick(tru_time / 1000, TICKS_PER_BEAT, bpm2tempo(BPM))),
+            midi_note_num,
+        )
         for (tru_time, midi_note_num) in notes
     ]
 
@@ -37,9 +41,9 @@ def process_notes(notes: List[Tuple[float, int]]) -> MidiFile:
     track = MidiTrack()
 
     tempo = bpm2tempo(BPM)
-    track.append(MetaMessage('set_tempo', tempo=tempo))
-    track.append(MetaMessage('time_signature'))
-    track.append(Message('program_change', program=0))
+    track.append(MetaMessage("set_tempo", tempo=tempo))
+    track.append(MetaMessage("time_signature"))
+    track.append(Message("program_change", program=0))
 
     # first convert to absolute ticks
     notes_ticks = ms_to_tick_gap_and_note_off(notes)

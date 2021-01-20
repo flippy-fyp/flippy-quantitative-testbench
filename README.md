@@ -71,7 +71,7 @@ python midi.py -h
 ```
 #### Typical usage
 ```bash
-python midi.py --midi <MIDI_PATH>
+python midi.py --input <MIDI_PATH>
 ```
 
 #### Output Score Format
@@ -79,7 +79,7 @@ Two columns each line representing note start time (ms, float) and MIDI note num
 
 #### Sample Usage
 ```bash
-$ python midi.py --midi ./data/sample_midis/short_demo.mid
+$ python midi.py --input ./data/sample_midis/short_demo.mid
 4.882802734375 60
 514.6474082031249 62
 1010.2518857421874 64

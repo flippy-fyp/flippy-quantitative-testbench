@@ -1,12 +1,14 @@
 import os
 import re
 import time
+import json
 from typing import Dict, Tuple, List
 from midi import process_midi
 from align import ASMAligner, alignment_repr
-from sharedtypes import Alignment, NoteInfo
+from sharedtypes import Alignment, NoteInfo, FollowerOutputLine
 from utils import eprint
-from processfile import process_score_file
+from processfile import process_ref_file
+from match import match
 
 REPO_ROOT = os.path.dirname(os.path.realpath(__file__))
 DATA_PATH = os.path.join(REPO_ROOT, "data")
@@ -59,8 +61,23 @@ def align_piece(name: str, postalignthres: float) -> Alignment:
     return p.align()
 
 
+def alignment_to_follower_output(alignment: Alignment) -> List[FollowerOutputLine]:
+    return [
+        {
+            "est_time": n["p"]["note_start"],
+            "det_time": n["p"]["note_start"],
+            "note_start": round(n["s"]["note_start"]), # round to match the notes produced in bach10 
+            "midi_note_num": n["p"]["midi_note_num"],
+        }
+        for n in alignment
+        if n["p"] is not None
+        and n["s"] is not None
+        and n["p"]["midi_note_num"] == n["s"]["midi_note_num"]
+    ]
+
+
 if __name__ == "__main__":
-    postalignthres: float = -1 
+    postalignthres: float = -1 # not needed
     alignments: List[Tuple[str, Alignment]] = [
         (name, align_piece(name, postalignthres)) for name in BACH10_PIECE_BASENAMES
     ]
@@ -80,5 +97,16 @@ if __name__ == "__main__":
         af.write(stdout)
         sf.close()
         af.close()
+
+        follower_output = alignment_to_follower_output(alignment)
+        ref_contents = process_ref_file(os.path.join(BACH10_PATH, name, f"{name}.txt"))
+
+        res = match(follower_output, ref_contents)
+        res_str = json.dumps(res, indent=4)
+
+        res_file_path = os.path.join(out_path, f"{name}.scofo.json")
+        rf = open(res_file_path, "w")
+        rf.write(res_str)
+        rf.close()
 
     print(f"OUTPUT: {OUTPUT_PATH}")

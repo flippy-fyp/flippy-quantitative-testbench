@@ -121,6 +121,17 @@ python score.py -h
 python refscore .py -h
 ```
 
+# Scripts
+
+#### Bach10 Dataset for ASM Alignment Benchmarking
+Requires [Bach10 dataset v1.1](http://www2.ece.rochester.edu/projects/air/resource.html) in `data/bach10/Bach10_v1.1`.
+
+```bash
+python script_bach10.py
+```
+
+Produces output in `data/bach10/output-<TIME>`.
+
 # Contributing
 
 ### Run unit tests
@@ -128,7 +139,7 @@ python refscore .py -h
 python -m unittest
 ```
 
-## References
+# References
 
 Testbench written based on the [MIREX Score Following](https://www.music-ir.org/mirex/wiki/2006:Score_Following_Proposal) standards and [jthickstun's alignment evaluation implementation](https://github.com/jthickstun/alignment-eval).
 

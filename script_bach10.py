@@ -66,7 +66,9 @@ def alignment_to_follower_output(alignment: Alignment) -> List[FollowerOutputLin
         {
             "est_time": n["p"]["note_start"],
             "det_time": n["p"]["note_start"],
-            "note_start": round(n["s"]["note_start"]), # round to match the notes produced in bach10 
+            "note_start": round(
+                n["s"]["note_start"]
+            ),  # round to match the notes produced in bach10
             "midi_note_num": n["p"]["midi_note_num"],
         }
         for n in alignment
@@ -77,7 +79,7 @@ def alignment_to_follower_output(alignment: Alignment) -> List[FollowerOutputLin
 
 
 if __name__ == "__main__":
-    postalignthres: float = -1 # not needed
+    postalignthres: float = -1  # not needed
     alignments: List[Tuple[str, Alignment]] = [
         (name, align_piece(name, postalignthres)) for name in BACH10_PIECE_BASENAMES
     ]

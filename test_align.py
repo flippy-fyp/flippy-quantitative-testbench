@@ -1,7 +1,7 @@
 import unittest
 from typing import List, Tuple
 from sharedtypes import NoteInfo
-from align import preprocess_rscore, ASMAligner, Alignment
+from align import sort_parallel_voices, ASMAligner, Alignment
 
 
 class TestASMAligner(unittest.TestCase):
@@ -34,7 +34,7 @@ class TestASMAligner(unittest.TestCase):
             ),
         ]
         for c, s, want in cases:
-            aligner = ASMAligner([], [])
+            aligner = ASMAligner([], [], -1)
             got = aligner._sim(c, s)
             self.assertEqual(want, got)
 
@@ -122,13 +122,13 @@ class TestASMAligner(unittest.TestCase):
             ),
         ]
         for P, S, want in cases:
-            aligner = ASMAligner(P, S)
+            aligner = ASMAligner(P, S, -1)
             got = aligner.get_alignment()
             self.assertEqual(want, got)
 
 
-class TestPreprocessRscore(unittest.TestCase):
-    def test_preprocess_rscore(self):
+class TestSortParallelVoices(unittest.TestCase):
+    def test_sort_parallel_voices(self):
         cases: List[Tuple[List[NoteInfo], List[NoteInfo]]] = [
             (
                 [
@@ -277,5 +277,5 @@ class TestPreprocessRscore(unittest.TestCase):
         ]
 
         for inp, want in cases:
-            got = preprocess_rscore(inp)
+            got = sort_parallel_voices(inp)
             self.assertEqual(want, got)

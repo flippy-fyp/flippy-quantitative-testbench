@@ -41,7 +41,7 @@ def process_track(
     for msg in track:
         curr_tick += msg.time
         if hasattr(msg, "velocity"):
-            if msg.velocity > 0 and msg.type == 'note_on':
+            if msg.velocity > 0 and msg.type == "note_on":
                 ret.append(
                     {
                         "note_start": mido.tick2second(curr_tick, ticks_per_beat, tempo)

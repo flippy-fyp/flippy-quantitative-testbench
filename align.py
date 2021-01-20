@@ -27,13 +27,15 @@ class GElem:
 
 
 class ASMAligner:
-    def __init__(self, P: List[NoteInfo], S: List[NoteInfo]):
+    def __init__(self, P: List[NoteInfo], S: List[NoteInfo], postalignthres: float):
         self.ALPHA = 1
         self.GAMMA = -1
         self.BETA_HAT = -12
-        self._P = P
-        self._S = S
+        self._P = sort_parallel_voices(P)
+        self._S = sort_parallel_voices(S)
         self._G: Dict[int, Dict[int, GElem]] = {}
+
+        self.postalignthres = postalignthres
 
     def get_alignment(self) -> Alignment:
         """
@@ -48,6 +50,12 @@ class ASMAligner:
         )
         if al is None:
             raise ValueError("Cannot get alignment")
+
+        if self.postalignthres >= 0:
+            eprint(f"Running PostAlign with threshold {self.postalignthres}")
+            pa = PostAlign(al, self.postalignthres)
+            al = pa.postalign()
+
         return al
 
     def _get_alignment_helper(self, x: int, y: int) -> Optional[Alignment]:
@@ -184,21 +192,23 @@ class ASMAligner:
         return self._G[x][y]
 
 
-def preprocess_rscore(rscore: List[NoteInfo]) -> List[NoteInfo]:
+def sort_parallel_voices(notes: List[NoteInfo]) -> List[NoteInfo]:
     """
-    Sorts parallel notes in rscore in ascending order.
-    rscore should already have the notes in ascending order w.r.t. note_start.
+    Sorts parallel notes in notes in ascending order.
     """
     sorted_grouped_par_notes: List[List[NoteInfo]] = [
         sorted(list(group), key=lambda n: n["midi_note_num"])
-        for _, group in groupby(rscore, lambda n: n["note_start"])
+        for _, group in groupby(notes, lambda n: n["note_start"])
     ]
 
     # flatten back
     return list(chain.from_iterable(sorted_grouped_par_notes))
 
 
-def print_alignment(alignment: Alignment):
+def alignment_repr(alignment: Alignment) -> Tuple[str, str]:
+    stdout = ""
+    stderr = ""
+
     num_mismatches = 0
     num_pgaps = 0
     num_sgaps = 0
@@ -213,28 +223,32 @@ def print_alignment(alignment: Alignment):
         if p is not None and s is not None:
             if p["midi_note_num"] == s["midi_note_num"]:
                 # match
-                print(
-                    f'{p["note_start"]:.3f} {s["note_start"]:.3f} {p["midi_note_num"]}'
-                )
+                stdout += f'{p["note_start"]:.3f} {s["note_start"]:.3f} {p["midi_note_num"]}\n'
             else:
                 # mismatch
                 num_mismatches += 1
-                print(
-                    f'// MISMATCH: {p["note_start"]:.3f} {p["midi_note_num"]} - {s["note_start"]:.3f} {s["midi_note_num"]}'
-                )
+                stdout += f'// MISMATCH: {p["note_start"]:.3f} {p["midi_note_num"]} - {s["note_start"]:.3f} {s["midi_note_num"]}\n'
 
         if p is None and s is not None:
             # gap in performance
             num_pgaps += 1
-            print(f'// GAP: GAP - {s["note_start"]:.3f} {s["midi_note_num"]}')
+            stdout += f'// GAP: GAP - {s["note_start"]:.3f} {s["midi_note_num"]}\n'
         if p is not None and s is None:
             # gap in score
             num_sgaps += 1
-            print(f'// GAP: {p["note_start"]:.3f} {p["midi_note_num"]} - GAP')
+            stdout += f'// GAP: {p["note_start"]:.3f} {p["midi_note_num"]} - GAP\n'
 
-    eprint(f"Length of alignment: {len(alignment)}")
-    eprint(f"Total number of gaps: {num_pgaps + num_sgaps}")
-    eprint(f"Total number of mismatches: {num_mismatches}")
+    stderr += f"Length of alignment: {len(alignment)}\n"
+    stderr += f"Total number of gaps: {num_pgaps + num_sgaps}\n"
+    stderr += f"Total number of mismatches: {num_mismatches}\n"
+
+    return (stdout, stderr)
+
+
+def print_alignment(alignment: Alignment):
+    stdout, stderr = alignment_repr(alignment)
+    print(stdout)
+    eprint(stderr)
 
 
 if __name__ == "__main__":
@@ -265,14 +279,9 @@ if __name__ == "__main__":
     postalignthres = args.postalignthres
 
     P = process_score_file(pscore_path)
-    S = preprocess_rscore(process_score_file(rscore_path))
+    S = process_score_file(rscore_path)
 
-    aligner = ASMAligner(P, S)
+    aligner = ASMAligner(P, S, postalignthres)
     alignment = aligner.get_alignment()
-
-    if postalignthres >= 0:
-        eprint(f"Running PostAlign with threshold {postalignthres}")
-        pa = PostAlign(alignment, postalignthres)
-        alignment = pa.postalign()
 
     print_alignment(alignment)

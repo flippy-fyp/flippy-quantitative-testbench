@@ -1,13 +1,12 @@
 # Flippy Quantitative Testbench
 
 (Real-time) Musical Score Audio Alignment (Score-following) Testbench and utilities.
- 
-## Usage
+
 ### Requirements
 - Python 3
 - Requirements: `pip install -r requirements.txt`
 
-### Testbench
+# Testbench
 
 #### Usage help
 ```bash
@@ -39,52 +38,7 @@ $ python testbench.py --align ./data/sample_txt/sample_scofo.txt --ref ./data/sa
 }
 ```
 
-### MIDI to Score Creation Tool
-
-#### Usage help
-```bash
-python midi.py -h
-```
-#### Typical usage
-```bash
-python midi.py --midi <MIDI_PATH>
-```
-
-#### Output Score Format
-Two columns each line representing note start time (ms, float) and MIDI note number respectively.
-
-#### Sample Usage
-```bash
-$ python midi.py --midi ./data/sample_midis/short_demo.mid
-4.882802734375 60
-514.6474082031249 62
-1010.2518857421874 64
-1505.8563632812497 64
-1505.8563632812497 67
-```
-
-### MusicXML to MIDI/Score Converter 
-
-#### Usage help
-```bash
-python musicxml.py
-```
-
-#### Sample Usage
-```bash
-$ python musicxml.py --input ./data/sample_musicxmls/prelude.mxl        
-0.0 60
-208.33325 64
-416.6665 67
-624.99975 72
-833.333 76
-1041.66625 67
-1249.9995 72
-1458.33275 76
-...
-```
-
-### ASM Score-Aligner 
+# ASM Score-Aligner 
 Produces testbench reference data from performance and reference scores. Uses a variation of the Needleman-Wunsch algorithm for optimal global alignment. The output follows the `<REFERENCE_RESULT_FILE>` format as per `sharedtypes.py::RefFileLine`. Mismatches and gaps are reported as in the Sample Usage example below.
 
 #### Usage help
@@ -109,7 +63,65 @@ Total number of mismatches: 2
 ```
 Note that the last three lines are output to `stderr` and that other lines are output to `stdout`.
 
-## Contributing
+# Converters
+## MIDI to Score Converter
+#### Usage help
+```bash
+python midi.py -h
+```
+#### Typical usage
+```bash
+python midi.py --midi <MIDI_PATH>
+```
+
+#### Output Score Format
+Two columns each line representing note start time (ms, float) and MIDI note number respectively.
+
+#### Sample Usage
+```bash
+$ python midi.py --midi ./data/sample_midis/short_demo.mid
+4.882802734375 60
+514.6474082031249 62
+1010.2518857421874 64
+1505.8563632812497 64
+1505.8563632812497 67
+```
+
+## MusicXML to MIDI/Score Converter 
+
+#### Usage help
+```bash
+python musicxml.py
+```
+
+#### Sample Usage
+```bash
+$ python musicxml.py --input ./data/sample_musicxmls/prelude.mxl        
+0.0 60
+208.33325 64
+416.6665 67
+624.99975 72
+833.333 76
+1041.66625 67
+1249.9995 72
+1458.33275 76
+...
+```
+
+## Score to MIDI Converter
+#### Usage help
+```bash
+python score.py -h
+```
+
+
+## Reference Score to MIDI Converter
+#### Usage help
+```bash
+python refscore .py -h
+```
+
+# Contributing
 
 ### Run unit tests
 ```bash

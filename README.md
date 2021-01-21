@@ -64,7 +64,7 @@ Total number of gaps in performance: 1
 Total number of gaps in score: 1
 Total number of mismatches: 2
 ```
-Note that the first and last four lines are output to `stderr` and that other lines are output to `stdout`.
+Note that the first and last four lines (logs) are output to `stderr` and that other lines (actual alignment result) are output to `stdout`.
 
 # Converters
 ## MIDI to Score Converter

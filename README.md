@@ -49,19 +49,22 @@ python align.py -h
 #### Sample Usage
 ```bash
 $ python align.py --pscore ./data/sample_txt/sample_pscore.txt --rscore ./data/sample_txt/sample_rscore.txt
-10.0 100.0 0
-// GAP: 20.0 1 - GAP
-30.0 200.0 2
-// GAP: GAP - 300.0 3
-40.0 400.0 3
-// MISMATCH: 50.0 0 - 500.0 2
-60.0 600.0 1
-// MISMATCH: 70.0 4 - 700.0 2
+Running PostAlign with threshold 0
+10.000 100.000 0
+// GAP: 20.000 1 - GAP
+30.000 200.000 2
+// GAP: GAP - 300.000 3
+40.000 400.000 3
+// MISMATCH: 50.000 0 - 500.000 2
+60.000 600.000 1
+// MISMATCH: 70.000 4 - 700.000 2
+
 Length of alignment: 8
-Total number of gaps: 2
+Total number of gaps in performance: 1
+Total number of gaps in score: 1
 Total number of mismatches: 2
 ```
-Note that the last three lines are output to `stderr` and that other lines are output to `stdout`.
+Note that the first and last four lines are output to `stderr` and that other lines are output to `stdout`.
 
 # Converters
 ## MIDI to Score Converter

@@ -239,7 +239,8 @@ def alignment_repr(alignment: Alignment) -> Tuple[str, str]:
             stdout += f'// GAP: {p["note_start"]:.3f} {p["midi_note_num"]} - GAP\n'
 
     stderr += f"Length of alignment: {len(alignment)}\n"
-    stderr += f"Total number of gaps: {num_pgaps + num_sgaps}\n"
+    stderr += f"Total number of gaps in performance: {num_pgaps}\n"
+    stderr += f"Total number of gaps in score: {num_sgaps}\n"
     stderr += f"Total number of mismatches: {num_mismatches}\n"
 
     return (stdout, stderr)

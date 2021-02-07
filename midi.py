@@ -4,6 +4,7 @@ import json
 from itertools import chain
 from typing import TypedDict, List, Any
 from utils.sharedtypes import NoteInfo
+from utils.repr import noteinfos_repr
 
 
 def process_midi(midi_path: str) -> List[NoteInfo]:
@@ -51,7 +52,6 @@ def process_track(
                 )
     return ret
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MIDI to Score Creation Tool.")
 
@@ -62,5 +62,6 @@ if __name__ == "__main__":
 
     res = process_midi(midi_path)
 
-    for r in res:
-        print(f'{r["note_start"]:.3f} {r["midi_note_num"]}')
+    out = noteinfos_repr(res)
+
+    print(out)

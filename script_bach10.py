@@ -45,6 +45,7 @@ class Bach10Piece:
     def _refalign_to_pscore(self) -> List[NoteInfo]:
         f = open(self.refalignpath)
         t = f.read().strip()
+        f.close()
 
         def process_line(line: str) -> NoteInfo:
             ls = line.split()

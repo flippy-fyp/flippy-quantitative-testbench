@@ -5,10 +5,10 @@ import json
 from typing import Dict, Tuple, List
 from midi import process_midi
 from align import ASMAligner, alignment_repr
-from sharedtypes import Alignment, NoteInfo, FollowerOutputLine
-from utils import eprint
-from processfile import process_ref_file
-from match import match
+from utils.sharedtypes import Alignment, NoteInfo, FollowerOutputLine
+from utils.eprint import eprint
+from utils.processfile import process_ref_file
+from utils.match import match
 
 REPO_ROOT = os.path.dirname(os.path.realpath(__file__))
 DATA_PATH = os.path.join(REPO_ROOT, "data")

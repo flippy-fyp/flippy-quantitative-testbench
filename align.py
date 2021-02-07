@@ -1,11 +1,10 @@
 import argparse
 from itertools import groupby, chain
 from typing import List, Dict, Tuple, Optional, TypedDict
-from sharedtypes import NoteInfo, Alignment
-from processfile import process_score_file
-from utils import eprint
-from postalign import PostAlign
-
+from utils.sharedtypes import NoteInfo, Alignment
+from utils.processfile import process_score_file
+from utils.eprint import eprint
+from utils.postalign import PostAlign
 
 class GElem:
     """

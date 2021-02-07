@@ -1,5 +1,5 @@
 import unittest
-from processfile import process_input_text, process_ref_text, process_score_text
+from utils.processfile import process_input_text, process_ref_text, process_score_text
 
 
 class TestProcessInputText(unittest.TestCase):

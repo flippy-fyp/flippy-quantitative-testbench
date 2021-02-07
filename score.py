@@ -1,4 +1,4 @@
-from processfile import process_score_file
+from utils.processfile import process_score_file
 from refscore import process_notes
 import argparse
 

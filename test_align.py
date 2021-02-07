@@ -1,6 +1,6 @@
 import unittest
 from typing import List, Tuple
-from sharedtypes import NoteInfo
+from utils.sharedtypes import NoteInfo
 from align import sort_parallel_voices, ASMAligner, Alignment
 
 

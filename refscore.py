@@ -1,7 +1,7 @@
 import argparse
-from mido import Message, MidiFile, MidiTrack, second2tick, MetaMessage, bpm2tempo
-from processfile import process_ref_file
+from mido import Message, MidiFile, MidiTrack, second2tick, MetaMessage, bpm2tempo # type: ignore
 from typing import List, Tuple
+from utils.processfile import process_ref_file
 
 BPM = 120
 TICKS_PER_BEAT = 48

@@ -1,9 +1,9 @@
-import mido
+import mido # type: ignore
 import argparse
 import json
 from itertools import chain
 from typing import TypedDict, List, Any
-from sharedtypes import NoteInfo
+from utils.sharedtypes import NoteInfo
 
 
 def process_midi(midi_path: str) -> List[NoteInfo]:

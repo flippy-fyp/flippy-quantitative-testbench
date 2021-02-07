@@ -49,19 +49,22 @@ python align.py -h
 #### Sample Usage
 ```bash
 $ python align.py --pscore ./data/sample_txt/sample_pscore.txt --rscore ./data/sample_txt/sample_rscore.txt
-10.0 100.0 0
-// GAP: 20.0 1 - GAP
-30.0 200.0 2
-// GAP: GAP - 300.0 3
-40.0 400.0 3
-// MISMATCH: 50.0 0 - 500.0 2
-60.0 600.0 1
-// MISMATCH: 70.0 4 - 700.0 2
+Running PostAlign with threshold 0
+10.000 100.000 0
+// GAP: 20.000 1 - GAP
+30.000 200.000 2
+// GAP: GAP - 300.000 3
+40.000 400.000 3
+// MISMATCH: 50.000 0 - 500.000 2
+60.000 600.000 1
+// MISMATCH: 70.000 4 - 700.000 2
+
 Length of alignment: 8
-Total number of gaps: 2
+Total number of gaps in performance: 1
+Total number of gaps in score: 1
 Total number of mismatches: 2
 ```
-Note that the last three lines are output to `stderr` and that other lines are output to `stdout`.
+Note that the first and last four lines (logs) are output to `stderr` and that other lines (actual alignment result) are output to `stdout`.
 
 # Converters
 ## MIDI to Score Converter
@@ -71,7 +74,7 @@ python midi.py -h
 ```
 #### Typical usage
 ```bash
-python midi.py --midi <MIDI_PATH>
+python midi.py --input <MIDI_PATH>
 ```
 
 #### Output Score Format
@@ -79,7 +82,7 @@ Two columns each line representing note start time (ms, float) and MIDI note num
 
 #### Sample Usage
 ```bash
-$ python midi.py --midi ./data/sample_midis/short_demo.mid
+$ python midi.py --input ./data/sample_midis/short_demo.mid
 4.882802734375 60
 514.6474082031249 62
 1010.2518857421874 64
@@ -123,7 +126,7 @@ python refscore .py -h
 
 # Scripts
 
-#### Bach10 Dataset for ASM Alignment Benchmarking
+### Bach10 Dataset for ASM Alignment Benchmarking
 Requires [Bach10 dataset v1.1](http://www2.ece.rochester.edu/projects/air/resource.html) in `data/bach10/Bach10_v1.1`.
 
 ```bash

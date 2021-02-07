@@ -1,6 +1,6 @@
 import unittest
-from match import match, preprocess_ref, MatchResult
-from processfile import FollowerOutputLine, RefFileLine
+from utils.match import match, preprocess_ref, MatchResult
+from utils.processfile import FollowerOutputLine, RefFileLine
 from typing import List, Tuple, Dict, TypedDict
 
 

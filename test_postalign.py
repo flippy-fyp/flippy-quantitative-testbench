@@ -1,7 +1,7 @@
 import unittest
 from typing import List, Tuple
-from sharedtypes import Alignment
-from postalign import PostAlign
+from utils.sharedtypes import Alignment
+from utils.postalign import PostAlign
 
 
 class TestPostAlign(unittest.TestCase):

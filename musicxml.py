@@ -1,9 +1,9 @@
-from music21 import converter
+from music21 import converter # type: ignore
 import argparse
 import sys
 import shutil
 import os
-from utils import eprint
+from utils.eprint import eprint
 from midi import process_midi
 
 if __name__ == "__main__":

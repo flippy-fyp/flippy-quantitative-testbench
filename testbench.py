@@ -1,7 +1,7 @@
 import argparse
 import json
-from processfile import process_input_file, process_ref_file
-from match import match
+from utils.processfile import process_input_file, process_ref_file
+from utils.match import match
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

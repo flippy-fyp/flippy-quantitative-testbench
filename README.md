@@ -112,6 +112,7 @@ python refscore .py -h
 
 # Scripts
 
+These scripts reproduce results in the [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf).
 ### Bach10 Dataset for ASM Alignment Benchmarking
 Requires [Bach10 dataset v1.1](http://www2.ece.rochester.edu/projects/air/resource.html) in `data/bach10/Bach10_v1.1`.
 
@@ -121,6 +122,14 @@ python script_bach10.py
 
 Produces output in `data/bach10/output-<TIME>`.
 
+### BWV846 Dataset for ASM Alignment Benchmarking
+```bash
+python script_bwv846.py
+```
+
+Logs will indicate where artifacts are stored.
+
+Alternatively, see commands to run in `data/bwv846/script.txt`.
 # Contributing
 
 ### Run unit tests

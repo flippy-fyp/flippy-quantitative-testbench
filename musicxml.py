@@ -1,4 +1,4 @@
-from music21 import converter # type: ignore
+from music21 import converter  # type: ignore
 import argparse
 import sys
 import shutil
@@ -6,6 +6,7 @@ import os
 import math
 from utils.eprint import eprint
 from midi import process_midi
+from utils.repr import noteinfos_repr
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MusicXML to MIDI/Score Converter.")
@@ -42,7 +43,6 @@ if __name__ == "__main__":
     elif mode == "score":
         res = process_midi(tmp_path)
 
-        for r in res:
-            print(f'{round(r["note_start"])} {r["midi_note_num"]}')
+        out = noteinfos_repr(res)
 
-        os.remove(tmp_path)
+        print(out)

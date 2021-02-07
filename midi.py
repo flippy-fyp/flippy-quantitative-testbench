@@ -63,4 +63,4 @@ if __name__ == "__main__":
     res = process_midi(midi_path)
 
     for r in res:
-        print(f'{r["note_start"]:.3f} {r["midi_note_num"]}')
+        print(f'{round(r["note_start"])} {r["midi_note_num"]}')

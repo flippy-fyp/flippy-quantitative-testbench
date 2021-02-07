@@ -19,8 +19,8 @@ python testbench.py --align <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE>
 ```
 
 #### File formats 
-- `<ALIGNMENT_OUTPUT>`: Four columns each line, see `sharedtypes.py::FollowerOutputLine`.
-- `<REFERENCE_RESULT_FILE>`: Three columns each line, see `sharedtypes.py::RefFileLine`.
+- `<ALIGNMENT_OUTPUT>`: Four columns each line, see `utils.sharedtypes.py::FollowerOutputLine`.
+- `<REFERENCE_RESULT_FILE>`: Three columns each line, see `utils.sharedtypes.py::RefFileLine`.
 
 #### Sample Usage
 ```bash
@@ -39,7 +39,7 @@ $ python testbench.py --align ./data/sample_txt/sample_scofo.txt --ref ./data/sa
 ```
 
 # ASM Score-Aligner 
-Produces testbench reference data from performance and reference scores. Uses a variation of the Needleman-Wunsch algorithm for optimal global alignment. The output follows the `<REFERENCE_RESULT_FILE>` format as per `sharedtypes.py::RefFileLine`. Mismatches and gaps are reported as in the Sample Usage example below.
+Produces testbench reference data from performance and reference scores. Uses a variation of the Needleman-Wunsch algorithm for optimal global alignment. The output follows the `<REFERENCE_RESULT_FILE>` format as per `utils.sharedtypes.py::RefFileLine`. Mismatches and gaps are reported as in the Sample Usage example below.
 
 #### Usage help
 ```bash
@@ -50,14 +50,14 @@ python align.py -h
 ```bash
 $ python align.py --pscore ./data/sample_txt/sample_pscore.txt --rscore ./data/sample_txt/sample_rscore.txt
 Running PostAlign with threshold 0
-10.000 100.000 0
-// GAP: 20.000 1 - GAP
-30.000 200.000 2
-// GAP: GAP - 300.000 3
-40.000 400.000 3
-// MISMATCH: 50.000 0 - 500.000 2
-60.000 600.000 1
-// MISMATCH: 70.000 4 - 700.000 2
+10 100 0
+// GAP: 20 1 - GAP
+30 200 2
+// GAP: GAP - 300 3
+40 400 3
+// MISMATCH: 50 0 - 500 2
+60 600 1
+// MISMATCH: 70 4 - 700 2
 
 Length of alignment: 8
 Total number of gaps in performance: 1
@@ -83,11 +83,11 @@ Two columns each line representing note start time (ms, float) and MIDI note num
 #### Sample Usage
 ```bash
 $ python midi.py --input ./data/sample_midis/short_demo.mid
-4.882802734375 60
-514.6474082031249 62
-1010.2518857421874 64
-1505.8563632812497 64
-1505.8563632812497 67
+5 60
+515 62
+1010 64
+1506 64
+1506 67
 ```
 
 ## MusicXML to MIDI/Score Converter 
@@ -95,20 +95,6 @@ $ python midi.py --input ./data/sample_midis/short_demo.mid
 #### Usage help
 ```bash
 python musicxml.py
-```
-
-#### Sample Usage
-```bash
-$ python musicxml.py --input ./data/sample_musicxmls/prelude.mxl        
-0.0 60
-208.33325 64
-416.6665 67
-624.99975 72
-833.333 76
-1041.66625 67
-1249.9995 72
-1458.33275 76
-...
 ```
 
 ## Score to MIDI Converter

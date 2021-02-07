@@ -3,6 +3,7 @@ import argparse
 import sys
 import shutil
 import os
+import math
 from utils.eprint import eprint
 from midi import process_midi
 
@@ -42,6 +43,6 @@ if __name__ == "__main__":
         res = process_midi(tmp_path)
 
         for r in res:
-            print(f'{r["note_start"]:.3f} {r["midi_note_num"]}')
+            print(f'{round(r["note_start"])} {r["midi_note_num"]}')
 
         os.remove(tmp_path)

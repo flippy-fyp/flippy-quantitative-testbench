@@ -1,14 +1,10 @@
 name: CI
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: push
 
 jobs:
   ci:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
@@ -18,13 +14,20 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8.x'
+          python-version: "3.8.x"
+      - name: Cache requirements
+        id: cache-requirements
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('**/requirements.txt') }}
       - name: Install dependencies
+        if: steps.cache-requirements.outputs.cache-hit != 'true'
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Mypy Check
-        uses: jpetrucciani/mypy-check@0.761
+        run: python -m mypy .
       - name: Unit tests
         run: |
           python -m unittest

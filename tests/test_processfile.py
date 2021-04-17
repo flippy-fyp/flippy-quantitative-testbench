@@ -1,9 +1,13 @@
 import unittest
-from utils.processfile import process_input_text, process_ref_text, process_score_text
+from utils.processfile import (
+    process_follower_input_text,
+    process_ref_text,
+    process_score_text,
+)
 
 
-class TestProcessInputText(unittest.TestCase):
-    def test_process_input_text_ok(self):
+class TestProcessFollowerInputText(unittest.TestCase):
+    def test_process_follower_input_text_ok(self):
         inp = "123.01 456 789 69\n123 456   789 69\n 1\t\t2\t\t3\t\t54\n"
         want = [
             {
@@ -25,10 +29,10 @@ class TestProcessInputText(unittest.TestCase):
                 "midi_note_num": 54,
             },
         ]
-        got = process_input_text(inp)
+        got = process_follower_input_text(inp)
         self.assertEqual(want, got)
 
-    def test_process_input_text_exception(self):
+    def test_process_follower_input_text_exception(self):
         cases = [
             "123",
             "abc def ghi",
@@ -37,7 +41,7 @@ class TestProcessInputText(unittest.TestCase):
 
         for c in cases:
             with self.assertRaises(ValueError):
-                process_input_text(c)
+                process_follower_input_text(c)
 
 
 class TestProcessRefText(unittest.TestCase):

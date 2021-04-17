@@ -1,5 +1,5 @@
 from typing import List, Optional
-from utils.sharedtypes import RefFileLine, NoteInfo, FollowerOutputLine
+from .sharedtypes import RefFileLine, NoteInfo, FollowerOutputLine
 
 
 def process_follower_input_file(input_file_path: str) -> List[FollowerOutputLine]:

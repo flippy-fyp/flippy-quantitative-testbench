@@ -1,4 +1,4 @@
-from utils.sharedtypes import Alignment, NoteInfo
+from .sharedtypes import Alignment, NoteInfo
 from typing import Optional, List, Tuple
 from copy import deepcopy
 

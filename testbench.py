@@ -1,7 +1,5 @@
 import argparse
-import json
-from utils.processfile import process_follower_input_file, process_ref_file
-from utils.match import match
+from utils.bench import bench
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -16,13 +14,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    inp = args.align
-    ref = args.ref
+    align_path = args.align
+    ref_path = args.ref
 
-    scofo_output = process_follower_input_file(inp)
-    ref_contents = process_ref_file(ref)
-
-    res = match(scofo_output, ref_contents)
-    res_str = json.dumps(res, indent=4)
-
-    print(res_str)
+    print(bench(align_path, ref_path))

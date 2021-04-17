@@ -1,5 +1,5 @@
 import argparse
-from mido import Message, MidiFile, MidiTrack, second2tick, MetaMessage, bpm2tempo # type: ignore
+from mido import Message, MidiFile, MidiTrack, second2tick, MetaMessage, bpm2tempo  # type: ignore
 from typing import List, Tuple
 from utils.processfile import process_ref_file
 

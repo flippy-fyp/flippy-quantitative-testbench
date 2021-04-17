@@ -7,6 +7,7 @@ from utils.eprint import eprint
 from utils.postalign import PostAlign
 from utils.repr import alignment_repr
 
+
 class GElem:
     """
     Represents an element in ASMAligner's grid G.

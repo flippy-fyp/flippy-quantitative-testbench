@@ -1,6 +1,12 @@
 from utils.processfile import FollowerOutputLine, RefFileLine
-from typing import List, Tuple, Dict, TypedDict
+from typing import Iterator, List, NewType, Optional, TypedDict, Tuple, Dict
 import numpy as np  # type: ignore
+from sortedcontainers import SortedDict  # type: ignore
+
+
+PreprocessedRef = NewType(  # type: ignore
+    "PreprocessedRef", "SortedDict[float, Dict[float, Tuple[float, int]]]"
+)
 
 # Misaligned notes are events in the score that are recognized but are
 # too far (regarding a given threshold θe, e.g. 300 ms) from
@@ -40,14 +46,13 @@ def match(
     ref_p = preprocess_ref(ref)
 
     for x in scofo_output:
-        t = (x["note_start"], x["midi_note_num"])
-
-        if t not in ref_p:
+        candidate_note = get_note_from_ref(x["note_start"], x["midi_note_num"], ref_p)
+        if candidate_note is None:
             # reporting events not in the score should not be possible--ignoring here
             # ref may also not contain all notes -- give the follower the benefit of the doubt
             continue
 
-        tru_time, idx = ref_p[t]
+        tru_time, idx = candidate_note
 
         # error is defined as the time lapse between the alignment positions of corresponding events in
         # the reference and the estimated alignment time
@@ -112,11 +117,42 @@ def safe_std(l: List[float]) -> float:
     return float(np.std(l))
 
 
-def preprocess_ref(ls: List[RefFileLine]) -> Dict[Tuple[float, int], Tuple[float, int]]:
+def preprocess_ref(ls: List[RefFileLine]) -> PreprocessedRef:
     """
-    gets a map from the note_start and midi_note_num dict to the tru_time and index
+    Gets a SortedDict mapping from note_start to midi_note_num to tru_time and index
     """
-    return {
-        (ls[i]["note_start"], ls[i]["midi_note_num"]): (ls[i]["tru_time"], i)
-        for i in range(len(ls))
-    }
+    res: PreprocessedRef = SortedDict()
+
+    for i in range(len(ls)):
+        l = ls[i]
+        if l["note_start"] not in res:
+            res[l["note_start"]] = {}
+        res[l["note_start"]][l["midi_note_num"]] = (l["tru_time"], i)
+
+    return res
+
+
+def get_note_from_ref(
+    note_start: float, midi_note_num: int, ref: PreprocessedRef, bound_ms: float = 1.0
+) -> Optional[Tuple[float, int]]:
+    """
+    Returns the tru_time and index of the note if found exactly or within a certain bound neighbouring the ref.
+    """
+    # Short path: found exactly
+    if note_start in ref and midi_note_num in ref:
+        return ref[note_start][midi_note_num]
+
+    # Long path: find within the bounds
+    closest_note_start_after_generator: Iterator[float] = ref.irange(
+        minimum=note_start - bound_ms,
+    )
+
+    n = next(closest_note_start_after_generator, None)
+    while n is not None:
+        if abs(n - note_start) > bound_ms:
+            return None
+        if midi_note_num in ref[n]:
+            return ref[n][midi_note_num]
+
+        n = next(closest_note_start_after_generator, None)
+    return None

@@ -141,9 +141,10 @@ cython_debug/
 .VSCodeCounter
 tmp
 
-bach10
 phenicx
 tfd
 
 .mscbackup
 output
+
+repro_results

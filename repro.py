@@ -1,11 +1,14 @@
 import sys
 from utils.eprint import eprint
+import os
+
+REPO_ROOT = os.path.dirname(os.path.realpath(__file__))
+DATA_PATH = os.path.join(REPO_ROOT, "data")
+REPRO_RESULTS_PATH = os.path.join(REPO_ROOT, "repro_results")
 
 
 def bach10():
-    import os
     import re
-    import time
     import json
     from typing import Tuple, List
     from midi import process_midi
@@ -15,10 +18,9 @@ def bach10():
     from utils.processfile import process_ref_file
     from utils.match import match
 
-    REPO_ROOT = os.path.dirname(os.path.realpath(__file__))
-    DATA_PATH = os.path.join(REPO_ROOT, "data")
     BACH10_PATH = os.path.join(DATA_PATH, "bach10", "Bach10_v1.1")
-    OUTPUT_PATH = os.path.join(DATA_PATH, "bach10", f"output-{int(time.time())}")
+    OUTPUT_PATH = os.path.join(REPRO_RESULTS_PATH, "bach10")
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
     BACH10_PIECE_PATHS = [
         f.path
         for f in os.scandir(BACH10_PATH)
@@ -118,15 +120,13 @@ def bach10():
 def bwv846():
     import os
     from midi import process_midi
-    import time
     from utils.repr import noteinfos_repr, alignment_repr
     from utils.processfile import process_score_file
     from align import ASMAligner
     from utils.eprint import eprint
 
-    REPO_ROOT = os.path.dirname(os.path.realpath(__file__))
-    DATA_PATH = os.path.join(REPO_ROOT, "data")
     BWV846_PATH = os.path.join(DATA_PATH, "bwv846")
+    OUTPUT_PATH = os.path.join(REPRO_RESULTS_PATH, "bwv846")
 
     # piece name to postalignthres
     PIECES = {
@@ -139,7 +139,7 @@ def bwv846():
         eprint(f"Post align thres: {postalignthres}")
 
         piece_path = os.path.join(BWV846_PATH, piece)
-        piece_output_path = os.path.join(piece_path, "output", str(int(time.time())))
+        piece_output_path = os.path.join(OUTPUT_PATH, piece)
         os.makedirs(piece_output_path, exist_ok=True)
 
         # convert midi to score format
@@ -185,17 +185,28 @@ def bwv846():
         eprint()
 
 
+func_map = {
+    "bwv846": bwv846,
+    "bach10": bach10,
+}
 if __name__ == "__main__":
     repro_args = sys.argv[1:]
-    if len(repro_args) != 1:
+    if len(repro_args) == 0:
+        eprint("No repro arg given--running everything!")
+        for name, f in func_map.items():
+            print("++++++++++++++++++++++++++++++++++++")
+            print(f"Starting: {name}")
+            print("++++++++++++++++++++++++++++++++++++")
+            f()
+            print("++++++++++++++++++++++++++++++++++++")
+            print(f"Finished: {name}")
+            print("++++++++++++++++++++++++++++++++++++")
+    elif len(repro_args) != 1:
         eprint(f"Unknown repro args: {repro_args}. Please see README.md")
         sys.exit(1)
     repro_arg = repro_args[0]
-
-    if repro_arg == "bwv846":
-        bwv846()
-    elif repro_arg == "bach10":
-        bach10()
+    if repro_arg in func_map:
+        func_map[repro_arg]()
     else:
         eprint(f"Unknown repro arg: {repro_arg}. Please see README.md")
         sys.exit(1)

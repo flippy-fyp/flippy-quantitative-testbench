@@ -114,6 +114,11 @@ python refscore .py -h
 
 These scripts reproduce results shown in [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf).
 
+To run everything:
+```bash
+python repro.py
+```
+
 ### Bach10 Dataset for ASM Alignment Benchmarking
 Requires [Bach10 dataset v1.1](http://www2.ece.rochester.edu/projects/air/resource.html) in `data/bach10/Bach10_v1.1`.
 

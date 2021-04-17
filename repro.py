@@ -202,7 +202,7 @@ if __name__ == "__main__":
     elif len(repro_args) != 1:
         eprint(f"Unknown repro args: {repro_args}. Please see README.md")
         sys.exit(1)
-    repro_arg = [0]
+    repro_arg = repro_args[0]
     if repro_arg in func_map:
         func_map[repro_arg]()
     else:

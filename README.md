@@ -117,14 +117,14 @@ These scripts reproduce results in the [project report](https://github.com/flipp
 Requires [Bach10 dataset v1.1](http://www2.ece.rochester.edu/projects/air/resource.html) in `data/bach10/Bach10_v1.1`.
 
 ```bash
-python script_bach10.py
+python repro.py bach10
 ```
 
 Produces output in `data/bach10/output-<TIME>`.
 
 ### BWV846 Dataset for ASM Alignment Benchmarking
 ```bash
-python script_bwv846.py
+python repro.py bwv846
 ```
 
 Logs will indicate where artifacts are stored.

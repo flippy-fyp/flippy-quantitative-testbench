@@ -87,12 +87,9 @@ def bach10():
         (name, align_piece(name, postalignthres)) for name in BACH10_PIECE_BASENAMES
     ]
 
-    if not os.path.exists(OUTPUT_PATH):
-        os.mkdir(OUTPUT_PATH)
-
     for name, alignment in alignments:
         out_path = os.path.join(OUTPUT_PATH, name)
-        os.mkdir(out_path)
+        os.makedirs(out_path, exist_ok=True)
         stat_file_path = os.path.join(out_path, f"{name}.align.stat")
         align_file_path = os.path.join(out_path, f"{name}.align.txt")
         sf = open(stat_file_path, "w")
@@ -201,10 +198,11 @@ if __name__ == "__main__":
             print("++++++++++++++++++++++++++++++++++++")
             print(f"Finished: {name}")
             print("++++++++++++++++++++++++++++++++++++")
+        sys.exit(0)
     elif len(repro_args) != 1:
         eprint(f"Unknown repro args: {repro_args}. Please see README.md")
         sys.exit(1)
-    repro_arg = repro_args[0]
+    repro_arg = [0]
     if repro_arg in func_map:
         func_map[repro_arg]()
     else:

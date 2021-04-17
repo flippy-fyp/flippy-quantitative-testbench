@@ -1,5 +1,6 @@
 import sys
-from utils import eprint
+from utils.eprint import eprint
+
 
 def bach10():
     import os
@@ -24,7 +25,6 @@ def bach10():
         if f.is_dir() and bool(re.search(r"^[0-9]{2}-\w+$", os.path.basename(f.path)))
     ]
     BACH10_PIECE_BASENAMES = [os.path.basename(x) for x in BACH10_PIECE_PATHS]
-
 
     class Bach10Piece:
         def __init__(self, name: str, postalignthres: float):
@@ -60,11 +60,9 @@ def bach10():
 
             return list(map(process_line, t.splitlines()))
 
-
     def align_piece(name: str, postalignthres: float) -> Alignment:
         p = Bach10Piece(name, postalignthres)
         return p.align()
-
 
     def alignment_to_follower_output(alignment: Alignment) -> List[FollowerOutputLine]:
         return [
@@ -81,7 +79,6 @@ def bach10():
             and n["s"] is not None
             and n["p"]["midi_note_num"] == n["s"]["midi_note_num"]
         ]
-
 
     postalignthres: float = -1  # not needed
     alignments: List[Tuple[str, Alignment]] = [
@@ -117,6 +114,7 @@ def bach10():
 
     print(f"OUTPUT: {OUTPUT_PATH}")
 
+
 def bwv846():
     import os
     from midi import process_midi
@@ -132,8 +130,8 @@ def bwv846():
 
     # piece name to postalignthres
     PIECES = {
-        'prelude': 0,
-        'fugue': 500,
+        "prelude": 0,
+        "fugue": 500,
     }
 
     for piece, postalignthres in PIECES.items():
@@ -151,7 +149,9 @@ def bwv846():
 
             mid_path = os.path.join(piece_path, f"{piece}.{midi_type}.mid")
             mid_notes = process_midi(mid_path)
-            output_path = os.path.join(piece_output_path, f"{piece}.{midi_type}score.txt")
+            output_path = os.path.join(
+                piece_output_path, f"{piece}.{midi_type}score.txt"
+            )
             mid_str = noteinfos_repr(mid_notes)
 
             of = open(output_path, "w")
@@ -179,7 +179,7 @@ def bwv846():
         sf = open(stat_file_path, "w")
         sf.write(stderr)
         sf.close()
-        
+
         eprint(f"Finished processing {piece}")
         eprint(f"View output in {piece_output_path}")
         eprint()

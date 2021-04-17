@@ -1,6 +1,6 @@
 from utils.processfile import FollowerOutputLine, RefFileLine
 from typing import List, Tuple, Dict, TypedDict
-import numpy as np # type: ignore
+import numpy as np  # type: ignore
 
 # Misaligned notes are events in the score that are recognized but are
 # too far (regarding a given threshold θe, e.g. 300 ms) from
@@ -109,7 +109,7 @@ def safe_std(l: List[float]) -> float:
     # return 0 if empty list
     if len(l) == 0:
         return 0.0
-    return np.std(l)
+    return float(np.std(l))
 
 
 def preprocess_ref(ls: List[RefFileLine]) -> Dict[Tuple[float, int], Tuple[float, int]]:

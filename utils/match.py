@@ -1,4 +1,4 @@
-from utils.processfile import FollowerOutputLine, RefFileLine
+from .processfile import FollowerOutputLine, RefFileLine
 from typing import Iterator, List, NewType, Optional, TypedDict, Tuple, Dict
 import numpy as np  # type: ignore
 from sortedcontainers import SortedDict  # type: ignore

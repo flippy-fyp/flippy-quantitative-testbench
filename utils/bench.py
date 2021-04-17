@@ -1,6 +1,6 @@
 import json
-from utils.processfile import process_follower_input_file, process_ref_file
-from utils.match import match
+from .processfile import process_follower_input_file, process_ref_file
+from .match import match
 
 
 def bench(align_path: str, ref_path: str) -> str:

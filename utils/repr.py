@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from utils.sharedtypes import NoteInfo, Alignment
+from .sharedtypes import NoteInfo, Alignment
 
 
 def alignment_repr(alignment: Alignment) -> Tuple[str, str]:

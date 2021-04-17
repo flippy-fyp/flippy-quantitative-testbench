@@ -1,7 +1,14 @@
 import unittest
-from utils.match import match, preprocess_ref, MatchResult
+from utils.match import (
+    PreprocessedRef,
+    get_note_from_ref,
+    match,
+    preprocess_ref,
+    MatchResult,
+)
 from utils.processfile import FollowerOutputLine, RefFileLine
-from typing import List, Tuple, Dict, TypedDict
+from typing import List, Optional, Tuple, TypedDict
+from sortedcontainers import SortedDict  # type: ignore
 
 
 class MatchTestCase(TypedDict):
@@ -383,6 +390,46 @@ class TestMatch(unittest.TestCase):
                     "mean_absolute_offset": 0.45,
                 },
             },
+            {
+                "name": "aligned all (within 1ms bound in note_start)",
+                "scofo_output": [
+                    {
+                        "est_time": 1.1,
+                        "det_time": 1.2,
+                        "note_start": 1,
+                        "midi_note_num": 42,
+                    },
+                    {
+                        "est_time": 3.1,
+                        "det_time": 3.2,
+                        "note_start": 5,
+                        "midi_note_num": 42,
+                    },
+                ],
+                "ref": [
+                    {
+                        "tru_time": 1,
+                        "note_start": 2,
+                        "midi_note_num": 42,
+                    },
+                    {
+                        "tru_time": 3,
+                        "note_start": 4,
+                        "midi_note_num": 42,
+                    },
+                ],
+                "want": {
+                    "miss_rate": 0.0,
+                    "misalign_rate": 0.0,
+                    "piece_completion": 1.0,
+                    "std_of_error": 0.0,
+                    "mean_absolute_error": 0.1,
+                    "std_of_latency": 0.0,
+                    "mean_latency": 0.1,
+                    "std_of_offset": 0.0,
+                    "mean_absolute_offset": 0.2,
+                },
+            },
         ]
 
         for tc in cases:
@@ -405,10 +452,51 @@ class TestPreprocessRef(unittest.TestCase):
                 "note_start": 5,
                 "midi_note_num": 6,
             },
+            {
+                "tru_time": 50,
+                "note_start": 5,
+                "midi_note_num": 100,
+            },
         ]
-        want: Dict[Tuple[float, int], Tuple[float, int]] = {
-            (2, 3): (1, 0),
-            (5, 6): (4, 1),
-        }
+        want: PreprocessedRef = SortedDict(
+            {
+                2: {3: (1, 0)},
+                5: {6: (4, 1), 100: (50, 2)},
+            }
+        )
         got = preprocess_ref(inp)
         self.assertEqual(want, got)
+
+
+class TestGetNoteFromRef(unittest.TestCase):
+    def test_get_note_from_ref(self):
+        note_start = 50.0
+        midi_note_num = 1
+        testcases: List[Tuple[str, PreprocessedRef, Optional[Tuple[float, int]]]] = [
+            ("Short path", SortedDict({50.0: {1: (42, 45)}}), (42, 45)),
+            ("Not found", SortedDict({50.0: {2: (42, 45)}}), None),
+            (
+                "Found within bounds (before)",
+                SortedDict({49.0: {1: (42, 45)}}),
+                (42, 45),
+            ),
+            (
+                "Found within bounds (after)",
+                SortedDict({51.0: {1: (42, 45)}}),
+                (42, 45),
+            ),
+            (
+                "Outside bounds",
+                SortedDict({51.1: {1: (42, 45)}}),
+                None,
+            ),
+            (
+                "Found within bounds complex case",
+                SortedDict({49.0: {2: (42, 45)}, 51.0: {1: (42, 45)}}),
+                (42, 45),
+            ),
+        ]
+
+        for name, ref, want in testcases:
+            got = get_note_from_ref(note_start, midi_note_num, ref)
+            self.assertEqual(want, got, name)

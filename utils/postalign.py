@@ -2,6 +2,7 @@ from utils.sharedtypes import Alignment, NoteInfo
 from typing import Optional, List, Tuple
 from copy import deepcopy
 
+
 class PostAlign:
     def __init__(self, alignment: Alignment, threshold_ms: float):
         self.alignment = deepcopy(alignment)

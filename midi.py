@@ -1,4 +1,4 @@
-import mido # type: ignore
+import mido  # type: ignore
 import argparse
 import json
 from itertools import chain
@@ -17,8 +17,7 @@ def process_midi(midi_path: str) -> List[NoteInfo]:
 def process_MidiFile(mid: mido.MidiFile) -> List[NoteInfo]:
     tempo = get_tempo(mid.tracks[0])
     track_midi_note_info_ticks: List[List[NoteInfo]] = [
-        process_track(track, mid.ticks_per_beat, tempo)
-        for track in mid.tracks
+        process_track(track, mid.ticks_per_beat, tempo) for track in mid.tracks
     ]
     # flatten
     ret: List[NoteInfo] = list(chain.from_iterable(track_midi_note_info_ticks))
@@ -51,6 +50,7 @@ def process_track(
                     }
                 )
     return ret
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="MIDI to Score Creation Tool.")

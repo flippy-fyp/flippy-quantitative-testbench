@@ -1,15 +1,15 @@
-from typing import NewType, List, Tuple, TypedDict, Optional
+from typing import List, Optional
 from utils.sharedtypes import RefFileLine, NoteInfo, FollowerOutputLine
 
 
-def process_input_file(input_file_path: str) -> List[FollowerOutputLine]:
+def process_follower_input_file(input_file_path: str) -> List[FollowerOutputLine]:
     f = open(input_file_path)
     t = f.read().strip()
     f.close()
-    return process_input_text(t)
+    return process_follower_input_text(t)
 
 
-def process_input_text(text: str) -> List[FollowerOutputLine]:
+def process_follower_input_text(text: str) -> List[FollowerOutputLine]:
     def process_line(line: str) -> FollowerOutputLine:
         ls = line.split()
         if len(ls) < 4:

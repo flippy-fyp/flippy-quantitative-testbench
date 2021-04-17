@@ -18,7 +18,7 @@ python testbench.py -h
 python testbench.py --align <ALIGNMENT_OUTPUT> --ref <REFERENCE_RESULT_FILE>
 ```
 
-#### File formats 
+#### File formats
 - `<ALIGNMENT_OUTPUT>`: Four columns each line, see `utils.sharedtypes.py::FollowerOutputLine`.
 - `<REFERENCE_RESULT_FILE>`: Three columns each line, see `utils.sharedtypes.py::RefFileLine`.
 
@@ -38,7 +38,7 @@ $ python testbench.py --align ./data/sample_txt/sample_scofo.txt --ref ./data/sa
 }
 ```
 
-# ASM Score-Aligner 
+# ASM Score-Aligner
 Produces testbench reference data from performance and reference scores. Uses a variation of the Needleman-Wunsch algorithm for optimal global alignment. The output follows the `<REFERENCE_RESULT_FILE>` format as per `utils.sharedtypes.py::RefFileLine`. Mismatches and gaps are reported as in the Sample Usage example below.
 
 #### Usage help
@@ -90,7 +90,7 @@ $ python midi.py --input ./data/sample_midis/short_demo.mid
 1506 67
 ```
 
-## MusicXML to MIDI/Score Converter 
+## MusicXML to MIDI/Score Converter
 
 #### Usage help
 ```bash
@@ -110,21 +110,25 @@ python score.py -h
 python refscore .py -h
 ```
 
-# Scripts
+## Results Reproduction
 
-These scripts reproduce results in the [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf).
-### Bach10 Dataset for ASM Alignment Benchmarking
-Requires [Bach10 dataset v1.1](http://www2.ece.rochester.edu/projects/air/resource.html) in `data/bach10/Bach10_v1.1`.
+These scripts reproduce results shown in [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf).
 
+To run everything:
 ```bash
-python script_bach10.py
+python repro.py
+```
+
+### Bach10 Dataset for ASM Alignment Benchmarking
+```bash
+python repro.py bach10
 ```
 
 Produces output in `data/bach10/output-<TIME>`.
 
 ### BWV846 Dataset for ASM Alignment Benchmarking
 ```bash
-python script_bwv846.py
+python repro.py bwv846
 ```
 
 Logs will indicate where artifacts are stored.

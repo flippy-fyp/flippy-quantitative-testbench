@@ -1,6 +1,6 @@
 import argparse
 import json
-from utils.processfile import process_input_file, process_ref_file
+from utils.processfile import process_follower_input_file, process_ref_file
 from utils.match import match
 
 if __name__ == "__main__":
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     inp = args.align
     ref = args.ref
 
-    scofo_output = process_input_file(inp)
+    scofo_output = process_follower_input_file(inp)
     ref_contents = process_ref_file(ref)
 
     res = match(scofo_output, ref_contents)

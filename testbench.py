@@ -1,4 +1,5 @@
 import argparse
+import json
 from utils.bench import bench
 
 if __name__ == "__main__":
@@ -12,9 +13,20 @@ if __name__ == "__main__":
     parser.add_argument(
         "--ref", type=str, help="Path to reference result file", required=True
     )
+    parser.add_argument(
+        "--misalign_threshold",
+        type=int,
+        help="Misalign threshold in ms",
+        required=True,
+        default=300,
+    )
 
     args = parser.parse_args()
     align_path = args.align
     ref_path = args.ref
 
-    print(bench(align_path, ref_path))
+    res = bench(align_path, ref_path)
+
+    res_str = json.dumps(res, indent=4)
+
+    print(res_str)

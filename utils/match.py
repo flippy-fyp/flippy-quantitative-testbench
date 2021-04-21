@@ -11,12 +11,12 @@ PreprocessedRef = NewType(  # type: ignore
 # Misaligned notes are events in the score that are recognized but are
 # too far (regarding a given threshold θe, e.g. 300 ms) from
 # the reference alignment to be considered correct.
-MISALIGN_THRESHOLD_MS = 300
+MISALIGN_THRESHOLD_MS_DEFAULT = 300
 
 
 class MatchResult(TypedDict):
     miss_rate: float  # percentage of missed score events
-    misalign_rate: float  # percentage of misaligned events with absolute error > MISALIGN_THRESHOLD_MS
+    misalign_rate: float  # percentage of misaligned events with absolute error > misalign_threshold_ms
     piece_completion: float  # percentage of events followed until follower hangs
 
     # for non-misaligned events
@@ -27,10 +27,13 @@ class MatchResult(TypedDict):
     std_of_offset: float
     mean_absolute_offset: float
 
+    precision_rate: float  # 1 - miss_rate - misalign_rate
+
 
 def match(
     scofo_output: List[FollowerOutputLine],
     ref: List[RefFileLine],
+    misalign_threshold_ms: int = MISALIGN_THRESHOLD_MS_DEFAULT,
 ) -> MatchResult:
     num_misaligned = 0
 
@@ -59,7 +62,7 @@ def match(
         # t_e - t_r
         error = x["est_time"] - tru_time
         errors.append(error)
-        if abs(error) > MISALIGN_THRESHOLD_MS:
+        if abs(error) > misalign_threshold_ms:
             num_misaligned += 1
             continue
 
@@ -81,9 +84,13 @@ def match(
         last_aligned_event_index + 1 if len(non_misaligned_errors) > 0 else 0
     )
 
+    miss_rate = safe_div((float(len(ref)) - len(errors)), len(ref))
+    misalign_rate = safe_div(float(num_misaligned), len(ref))
+    precision_rate = 1.0 - miss_rate - misalign_rate
+
     res: MatchResult = {
-        "miss_rate": safe_div((float(len(ref)) - len(errors)), len(ref)),
-        "misalign_rate": safe_div(float(num_misaligned), len(ref)),
+        "miss_rate": miss_rate,
+        "misalign_rate": misalign_rate,
         "piece_completion": safe_div(float(last_aligned_event_index), len(ref)),
         "std_of_error": safe_std(non_misaligned_errors),
         "mean_absolute_error": mean_abs(non_misaligned_errors),
@@ -91,6 +98,7 @@ def match(
         "mean_latency": mean(latencies),
         "std_of_offset": safe_std(offsets),
         "mean_absolute_offset": mean_abs(offsets),
+        "precision_rate": precision_rate,
     }
     return res
 

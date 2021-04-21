@@ -36,6 +36,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.0,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.0,
+                    "precision_rate": 1.0,
                 },
             },
             {
@@ -63,6 +64,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.0,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.0,
+                    "precision_rate": 0.0,
                 },
             },
             {
@@ -92,6 +94,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.0,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.0,
+                    "precision_rate": 1.0,
                 },
             },
             {
@@ -132,6 +135,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.0,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.0,
+                    "precision_rate": 0.0,
                 },
             },
             {
@@ -172,6 +176,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.0,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.0,
+                    "precision_rate": 0.0,
                 },
             },
             {
@@ -212,6 +217,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.1,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.2,
+                    "precision_rate": 1.0,
                 },
             },
             {
@@ -263,6 +269,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.1,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.2,
+                    "precision_rate": 0.6666666666666666,
                 },
             },
             {
@@ -308,6 +315,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.1,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.2,
+                    "precision_rate": 0.6666666666666666,
                 },
             },
             {
@@ -348,6 +356,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.05,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.05,
+                    "precision_rate": 1.0,
                 },
             },
             {
@@ -388,6 +397,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.15,
                     "std_of_offset": 0.25,
                     "mean_absolute_offset": 0.45,
+                    "precision_rate": 1.0,
                 },
             },
             {
@@ -428,6 +438,7 @@ class TestMatch(unittest.TestCase):
                     "mean_latency": 0.1,
                     "std_of_offset": 0.0,
                     "mean_absolute_offset": 0.2,
+                    "precision_rate": 1.0,
                 },
             },
         ]

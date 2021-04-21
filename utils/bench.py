@@ -1,4 +1,3 @@
-import json
 from .processfile import process_follower_input_file, process_ref_file
 from .match import MISALIGN_THRESHOLD_MS_DEFAULT, MatchResult, match
 

@@ -27,6 +27,9 @@ class MatchResult(TypedDict):
     std_of_offset: float
     mean_absolute_offset: float
 
+    miss_num: int  # number of missed score events
+    misalign_num: int  # number of misaligned score events
+    total_num: int  # total number of score events
     precision_rate: float  # 1 - miss_rate - misalign_rate
 
 
@@ -83,9 +86,10 @@ def match(
     last_aligned_event_index = (
         last_aligned_event_index + 1 if len(non_misaligned_errors) > 0 else 0
     )
-
-    miss_rate = safe_div((float(len(ref)) - len(errors)), len(ref))
-    misalign_rate = safe_div(float(num_misaligned), len(ref))
+    total_num = len(ref)
+    miss_num = len(ref) - len(errors)
+    miss_rate = safe_div(float(miss_num), total_num)
+    misalign_rate = safe_div(float(num_misaligned), total_num)
     precision_rate = 1.0 - miss_rate - misalign_rate
 
     res: MatchResult = {
@@ -98,6 +102,9 @@ def match(
         "mean_latency": mean(latencies),
         "std_of_offset": safe_std(offsets),
         "mean_absolute_offset": mean_abs(offsets),
+        "miss_num": miss_num,
+        "misalign_num": num_misaligned,
+        "total_num": total_num,
         "precision_rate": precision_rate,
     }
     return res

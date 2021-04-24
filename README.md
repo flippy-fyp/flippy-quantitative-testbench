@@ -34,7 +34,11 @@ $ python testbench.py --align ./data/sample_txt/sample_scofo.txt --ref ./data/sa
     "std_of_latency": 1.1102230246251565e-16,
     "mean_latency": 0.09999999999999998,
     "std_of_offset": 1.1102230246251565e-16,
-    "mean_absolute_offset": 0.20000000000000007
+    "mean_absolute_offset": 0.20000000000000007,
+    "miss_num": 0,
+    "misalign_num": 0,
+    "total_num": 2,
+    "precision_rate": 1.0
 }
 ```
 

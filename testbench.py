@@ -17,7 +17,6 @@ if __name__ == "__main__":
         "--misalign_threshold",
         type=int,
         help="Misalign threshold in ms",
-        required=True,
         default=300,
     )
 

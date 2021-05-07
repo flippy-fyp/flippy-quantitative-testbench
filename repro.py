@@ -43,7 +43,7 @@ def bach10():
             align and return (alignment)
             """
             eprint(f"Aligning {self.name}")
-            aligner = ASMAligner(self.pscore, self.rscore, postalignthres)
+            aligner = ASMAligner(self.pscore, self.rscore, self.postalignthres)
             alignment = aligner.get_alignment()
 
             return alignment

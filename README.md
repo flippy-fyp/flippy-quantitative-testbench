@@ -116,7 +116,7 @@ python refscore .py -h
 
 # Results Reproduction
 
-These scripts reproduce results shown in [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf).
+These scripts reproduce results shown in the [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf).
 
 To run everything:
 ```bash

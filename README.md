@@ -114,7 +114,7 @@ python score.py -h
 python refscore .py -h
 ```
 
-## Results Reproduction
+# Results Reproduction
 
 These scripts reproduce results shown in [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf).
 
@@ -123,19 +123,19 @@ To run everything:
 python repro.py
 ```
 
-### Bach10 Dataset for ASM Alignment Benchmarking
+## Bach10 Dataset for ASM Alignment Benchmarking
 ```bash
 python repro.py bach10
 ```
 
 Produces output in `data/bach10/output-<TIME>`.
 
-### BWV846 Dataset for ASM Alignment Benchmarking
+## BWV846 Dataset for ASM Alignment Benchmarking
 ```bash
 python repro.py bwv846
 ```
 
-### Bach10 Dataset Oracle Alignment
+## Bach10 Dataset Oracle Alignment
 ```bash
 python repro.py bach10_oracle
 ```

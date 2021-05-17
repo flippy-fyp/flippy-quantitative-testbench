@@ -1,4 +1,4 @@
-d# Flippy Quantitative Testbench
+# Flippy Quantitative Testbench
 
 (Real-time) Musical Score Audio Alignment (Score-following) Testbench and utilities.
 

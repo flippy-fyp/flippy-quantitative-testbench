@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--bound_ms",
         type=float,
-        help="Bound in ms to form a search window (2*bound_ms wide) to match notes in the dataset with notes in the alignment output.",
+        help="Bound in ms to form a search window (bound_ms wide) to match notes in the dataset with notes in the alignment output.",
         default=1.0,
     )
 

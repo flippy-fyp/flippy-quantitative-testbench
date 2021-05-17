@@ -124,57 +124,59 @@ def bwv846():
     BWV846_PATH = os.path.join(DATA_PATH, "bwv846")
     OUTPUT_PATH = os.path.join(REPRO_RESULTS_PATH, "bwv846")
 
-    # piece name to postalignthres
-    PIECES = {
-        "prelude": 0,
-        "fugue": 500,
-    }
+    pieces = ["prelude", "fugue"]
+    postalignthreses = [-1, 0, 500, 1000]
 
-    for piece, postalignthres in PIECES.items():
+    for piece in pieces:
         eprint(f"=== Processing: {piece} ===")
-        eprint(f"Post align thres: {postalignthres}")
-
         piece_path = os.path.join(BWV846_PATH, piece)
         piece_output_path = os.path.join(OUTPUT_PATH, piece)
         os.makedirs(piece_output_path, exist_ok=True)
 
-        # convert midi to score format
-        for midi_type in ["r", "p"]:
-            # r: reference (score)
-            # p: performance
+        for postalignthres in postalignthreses:
+            eprint(f"Post align thres: {postalignthres}")
 
-            mid_path = os.path.join(piece_path, f"{piece}.{midi_type}.mid")
-            mid_notes = process_midi(mid_path)
-            output_path = os.path.join(
-                piece_output_path, f"{piece}.{midi_type}score.txt"
-            )
-            mid_str = noteinfos_repr(mid_notes)
+            # with postalignthres
+            actual_output_path = os.path.join(piece_output_path, str(postalignthres))
+            os.makedirs(actual_output_path, exist_ok=True)
 
-            of = open(output_path, "w")
-            of.write(mid_str)
+            # convert midi to score format
+            for midi_type in ["r", "p"]:
+                # r: reference (score)
+                # p: performance
+
+                mid_path = os.path.join(piece_path, f"{piece}.{midi_type}.mid")
+                mid_notes = process_midi(mid_path)
+                output_path = os.path.join(
+                    actual_output_path, f"{piece}.{midi_type}score.txt"
+                )
+                mid_str = noteinfos_repr(mid_notes)
+
+                of = open(output_path, "w")
+                of.write(mid_str)
+                of.close()
+
+            pscore_path = os.path.join(actual_output_path, f"{piece}.pscore.txt")
+            rscore_path = os.path.join(actual_output_path, f"{piece}.rscore.txt")
+
+            P = process_score_file(pscore_path)
+            S = process_score_file(rscore_path)
+
+            aligner = ASMAligner(P, S, postalignthres)
+            alignment = aligner.get_alignment()
+
+            stdout, stderr = alignment_repr(alignment)
+
+            align_out_path = os.path.join(actual_output_path, f"{piece}.align.txt")
+            stat_file_path = os.path.join(actual_output_path, f"{piece}.align.stat.txt")
+
+            of = open(align_out_path, "w")
+            of.write(stdout)
             of.close()
 
-        pscore_path = os.path.join(piece_output_path, f"{piece}.pscore.txt")
-        rscore_path = os.path.join(piece_output_path, f"{piece}.rscore.txt")
-
-        P = process_score_file(pscore_path)
-        S = process_score_file(rscore_path)
-
-        aligner = ASMAligner(P, S, postalignthres)
-        alignment = aligner.get_alignment()
-
-        stdout, stderr = alignment_repr(alignment)
-
-        align_out_path = os.path.join(piece_output_path, f"{piece}.align.txt")
-        stat_file_path = os.path.join(piece_output_path, f"{piece}.align.stat.txt")
-
-        of = open(align_out_path, "w")
-        of.write(stdout)
-        of.close()
-
-        sf = open(stat_file_path, "w")
-        sf.write(stderr)
-        sf.close()
+            sf = open(stat_file_path, "w")
+            sf.write(stderr)
+            sf.close()
 
         eprint(f"Finished processing {piece}")
         eprint(f"View output in {piece_output_path}")

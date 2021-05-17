@@ -37,6 +37,7 @@ def match(
     scofo_output: List[FollowerOutputLine],
     ref: List[RefFileLine],
     misalign_threshold_ms: int = MISALIGN_THRESHOLD_MS_DEFAULT,
+    bound_ms: float = 1.0,
 ) -> MatchResult:
     num_misaligned = 0
 
@@ -52,7 +53,9 @@ def match(
     ref_p = preprocess_ref(ref)
 
     for x in scofo_output:
-        candidate_note = get_note_from_ref(x["note_start"], x["midi_note_num"], ref_p)
+        candidate_note = get_note_from_ref(
+            x["note_start"], x["midi_note_num"], ref_p, bound_ms
+        )
         if candidate_note is None:
             # reporting events not in the score should not be possible--ignoring here
             # ref may also not contain all notes -- give the follower the benefit of the doubt

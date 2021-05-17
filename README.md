@@ -54,14 +54,14 @@ python align.py -h
 ```bash
 $ python align.py --pscore ./data/sample_txt/sample_pscore.txt --rscore ./data/sample_txt/sample_rscore.txt
 Running PostAlign with threshold 0
-10 100 0
-// GAP: 20 1 - GAP
-30 200 2
-// GAP: GAP - 300 3
-40 400 3
-// MISMATCH: 50 0 - 500 2
-60 600 1
-// MISMATCH: 70 4 - 700 2
+10.0 100.0 0
+// GAP: 20.0 1 - GAP
+30.0 200.0 2
+// GAP: GAP - 300.0 3
+40.0 400.0 3
+// MISMATCH: 50.0 0 - 500.0 2
+60.0 600.0 1
+// MISMATCH: 70.0 4 - 700.0 2
 
 Length of alignment: 8
 Total number of gaps in performance: 1
@@ -87,11 +87,11 @@ Two columns each line representing note start time (ms, float) and MIDI note num
 #### Sample Usage
 ```bash
 $ python midi.py --input ./data/sample_midis/short_demo.mid
-5 60
-515 62
-1010 64
-1506 64
-1506 67
+4.882802734375 60
+514.6474082031249 62
+1010.2518857421874 64
+1505.8563632812497 64
+1505.8563632812497 67
 ```
 
 ## MusicXML to MIDI/Score Converter
@@ -133,6 +133,11 @@ Produces output in `data/bach10/output-<TIME>`.
 ### BWV846 Dataset for ASM Alignment Benchmarking
 ```bash
 python repro.py bwv846
+```
+
+### Bach10 Dataset Oracle Alignment
+```bash
+python repro.py bach10_oracle
 ```
 
 Logs will indicate where artifacts are stored.

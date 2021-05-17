@@ -1,3 +1,4 @@
+from utils.match import safe_div
 import sys
 from utils.eprint import eprint
 import os
@@ -43,7 +44,7 @@ def bach10():
             align and return (alignment)
             """
             eprint(f"Aligning {self.name}")
-            aligner = ASMAligner(self.pscore, self.rscore, postalignthres)
+            aligner = ASMAligner(self.pscore, self.rscore, self.postalignthres)
             alignment = aligner.get_alignment()
 
             return alignment
@@ -71,9 +72,7 @@ def bach10():
             {
                 "est_time": n["p"]["note_start"],
                 "det_time": n["p"]["note_start"],
-                "note_start": round(
-                    n["s"]["note_start"]
-                ),  # round to match the notes produced in bach10
+                "note_start": n["s"]["note_start"],
                 "midi_note_num": n["p"]["midi_note_num"],
             }
             for n in alignment
@@ -125,66 +124,170 @@ def bwv846():
     BWV846_PATH = os.path.join(DATA_PATH, "bwv846")
     OUTPUT_PATH = os.path.join(REPRO_RESULTS_PATH, "bwv846")
 
-    # piece name to postalignthres
-    PIECES = {
-        "prelude": 0,
-        "fugue": 500,
-    }
+    pieces = ["prelude", "fugue"]
+    postalignthreses = [-1, 0, 500, 1000]
 
-    for piece, postalignthres in PIECES.items():
+    for piece in pieces:
         eprint(f"=== Processing: {piece} ===")
-        eprint(f"Post align thres: {postalignthres}")
-
         piece_path = os.path.join(BWV846_PATH, piece)
         piece_output_path = os.path.join(OUTPUT_PATH, piece)
         os.makedirs(piece_output_path, exist_ok=True)
 
-        # convert midi to score format
-        for midi_type in ["r", "p"]:
-            # r: reference (score)
-            # p: performance
+        for postalignthres in postalignthreses:
+            eprint(f"Post align thres: {postalignthres}")
 
-            mid_path = os.path.join(piece_path, f"{piece}.{midi_type}.mid")
-            mid_notes = process_midi(mid_path)
-            output_path = os.path.join(
-                piece_output_path, f"{piece}.{midi_type}score.txt"
-            )
-            mid_str = noteinfos_repr(mid_notes)
+            # with postalignthres
+            actual_output_path = os.path.join(piece_output_path, str(postalignthres))
+            os.makedirs(actual_output_path, exist_ok=True)
 
-            of = open(output_path, "w")
-            of.write(mid_str)
+            # convert midi to score format
+            for midi_type in ["r", "p"]:
+                # r: reference (score)
+                # p: performance
+
+                mid_path = os.path.join(piece_path, f"{piece}.{midi_type}.mid")
+                mid_notes = process_midi(mid_path)
+                output_path = os.path.join(
+                    actual_output_path, f"{piece}.{midi_type}score.txt"
+                )
+                mid_str = noteinfos_repr(mid_notes)
+
+                of = open(output_path, "w")
+                of.write(mid_str)
+                of.close()
+
+            pscore_path = os.path.join(actual_output_path, f"{piece}.pscore.txt")
+            rscore_path = os.path.join(actual_output_path, f"{piece}.rscore.txt")
+
+            P = process_score_file(pscore_path)
+            S = process_score_file(rscore_path)
+
+            aligner = ASMAligner(P, S, postalignthres)
+            alignment = aligner.get_alignment()
+
+            stdout, stderr = alignment_repr(alignment)
+
+            align_out_path = os.path.join(actual_output_path, f"{piece}.align.txt")
+            stat_file_path = os.path.join(actual_output_path, f"{piece}.align.stat.txt")
+
+            of = open(align_out_path, "w")
+            of.write(stdout)
             of.close()
 
-        pscore_path = os.path.join(piece_output_path, f"{piece}.pscore.txt")
-        rscore_path = os.path.join(piece_output_path, f"{piece}.rscore.txt")
-
-        P = process_score_file(pscore_path)
-        S = process_score_file(rscore_path)
-
-        aligner = ASMAligner(P, S, postalignthres)
-        alignment = aligner.get_alignment()
-
-        stdout, stderr = alignment_repr(alignment)
-
-        align_out_path = os.path.join(piece_output_path, f"{piece}.align.txt")
-        stat_file_path = os.path.join(piece_output_path, f"{piece}.align.stat.txt")
-
-        of = open(align_out_path, "w")
-        of.write(stdout)
-        of.close()
-
-        sf = open(stat_file_path, "w")
-        sf.write(stderr)
-        sf.close()
+            sf = open(stat_file_path, "w")
+            sf.write(stderr)
+            sf.close()
 
         eprint(f"Finished processing {piece}")
         eprint(f"View output in {piece_output_path}")
         eprint()
 
 
+"""
+def bach10_oracle():
+    import re
+    from utils.midi import process_midi
+    from utils.match import match, MatchResult
+    from utils.sharedtypes import FollowerOutputLine
+    from utils.processfile import process_ref_file
+    from typing import List, Dict
+    import json
+
+    AlignResultsT = Dict[int, MatchResult]
+    OverallResultsT = Dict[int, List[MatchResult]]
+
+    def __get_and_write_align_results(
+        midi_path: str, ref_align_path: str, align_results_path: str
+    ) -> AlignResultsT:
+
+        midi_notes = process_midi(midi_path)
+        ref_notes = process_ref_file(ref_align_path)
+
+        scofo_output: List[FollowerOutputLine] = [
+            {
+                "est_time": n["tru_time"],
+                "det_time": n["tru_time"],
+                "note_start": n["note_start"],
+                "midi_note_num": n["midi_note_num"],
+            }
+            for n in ref_notes
+        ]
+
+        align_results = {
+            thres: match(midi_follower_notes, ref_notes, thres)
+            for thres in MISALIGN_THRESHOLD_MS_RANGE
+        }
+        with open(align_results_path, "w+") as f:
+            align_result_str = json.dumps(align_results, indent=4)
+            f.write(align_result_str)
+        return align_results
+
+    def __write_overall_results(overall_results: OverallResultsT, output_base_dir: str):
+        total_dict: Dict[int, Dict[str, float]] = {}
+        for thres, results in overall_results.items():
+            precision_rates = list(map(lambda x: x["precision_rate"], results))
+            piecewise_precision_rate = sum(precision_rates) / len(precision_rates)
+
+            total_num = sum(map(lambda x: x["total_num"], results))
+            miss_num = sum(map(lambda x: x["miss_num"], results))
+            misalign_num = sum(map(lambda x: x["misalign_num"], results))
+
+            align_num = total_num - miss_num - misalign_num
+            total_precision_rate = safe_div(float(align_num), total_num)
+
+            total_dict[thres] = {
+                "piecewise_precision_rate": piecewise_precision_rate,
+                "total_precision_rate": total_precision_rate,
+            }
+        total_output_path = os.path.join(output_base_dir, "results.json")
+        with open(total_output_path, "w+") as f:
+            total_dict_str = json.dumps(total_dict, indent=4)
+            f.write(total_dict_str)
+
+    repro_arg = "bach10_oracle"
+    MISALIGN_THRESHOLD_MS_RANGE = range(50, 2050, 50)
+    OUTPUT_PATH = os.path.join(REPRO_RESULTS_PATH, repro_arg)
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
+
+    BACH10_PATH = os.path.join(DATA_PATH, "bach10", "Bach10_v1.1")
+    BACH10_PIECE_PATHS = [
+        f.path
+        for f in os.scandir(BACH10_PATH)
+        if f.is_dir() and bool(re.search(r"^[0-9]{2}-\w+$", os.path.basename(f.path)))
+    ]
+    overall_results: OverallResultsT = {}
+
+    for piece_path in BACH10_PIECE_PATHS:
+        piece_basename = os.path.basename(piece_path)
+        print("======================================")
+        print(f"Starting to process: {piece_basename}")
+        print("======================================")
+
+        ref_align_path = os.path.join(piece_path, f"{piece_basename}.txt")
+        midi_path = os.path.join(piece_path, f"{piece_basename}.mid")
+
+        results_dir = os.path.join(OUTPUT_PATH, piece_basename)
+        os.makedirs(results_dir, exist_ok=True)
+        align_results_path = os.path.join(results_dir, "align.txt")
+
+        align_results = __get_and_write_align_results(
+            midi_path, ref_align_path, align_results_path
+        )
+
+        for thres, align_result in align_results.items():
+            if thres not in overall_results:
+                overall_results[thres].append(align_result)
+
+        print("======================================")
+        print(f"Finished processing: {piece_basename}")
+        print("======================================")
+    __write_overall_results(overall_results, OUTPUT_PATH)
+"""
+
 func_map = {
     "bwv846": bwv846,
     "bach10": bach10,
+    # "bach10_oracle": bach10_oracle,
 }
 if __name__ == "__main__":
     repro_args = sys.argv[1:]

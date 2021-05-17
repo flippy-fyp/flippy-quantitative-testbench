@@ -6,6 +6,7 @@ def bench(
     align_path: str,
     ref_path: str,
     misalign_threshold_ms: int = MISALIGN_THRESHOLD_MS_DEFAULT,
+    bound_ms: float = 1.0,
 ) -> MatchResult:
     scofo_output = process_follower_input_file(align_path)
     ref_contents = process_ref_file(ref_path)

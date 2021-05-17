@@ -72,9 +72,7 @@ def bach10():
             {
                 "est_time": n["p"]["note_start"],
                 "det_time": n["p"]["note_start"],
-                "note_start": round(
-                    n["s"]["note_start"]
-                ),  # round to match the notes produced in bach10
+                "note_start": n["s"]["note_start"],
                 "midi_note_num": n["p"]["midi_note_num"],
             }
             for n in alignment

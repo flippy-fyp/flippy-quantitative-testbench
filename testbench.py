@@ -19,6 +19,12 @@ if __name__ == "__main__":
         help="Misalign threshold in ms",
         default=300,
     )
+    parser.add_argument(
+        "--bound_ms",
+        type=float,
+        help="Bound in ms to form a search window (2*bound_ms wide) to match notes in the dataset with notes in the alignment output.",
+        default=1.0,
+    )
 
     args = parser.parse_args()
     align_path = args.align

@@ -135,11 +135,6 @@ Produces output in `data/bach10/output-<TIME>`.
 python repro.py bwv846
 ```
 
-## Bach10 Dataset Oracle Alignment
-```bash
-python repro.py bach10_oracle
-```
-
 Logs will indicate where artifacts are stored.
 
 Alternatively, see commands to run in `data/bwv846/script.txt`.

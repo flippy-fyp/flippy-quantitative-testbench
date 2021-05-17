@@ -182,9 +182,17 @@ def bwv846():
         eprint()
 
 
+def bach10_oracle():
+    repro_arg = "bach10_oracle"
+    MISALIGN_THRESHOLD_MS_RANGE = range(50, 2050, 50)
+    OUTPUT_PATH = os.path.join(REPRO_RESULTS_PATH, repro_arg)
+    os.makedirs(OUTPUT_PATH, exist_ok=True)
+
+
 func_map = {
     "bwv846": bwv846,
     "bach10": bach10,
+    "bach10_oracle": bach10_oracle,
 }
 if __name__ == "__main__":
     repro_args = sys.argv[1:]

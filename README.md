@@ -107,12 +107,13 @@ python musicxml.py
 python score.py -h
 ```
 
-
 ## Reference Score to MIDI Converter
 #### Usage help
 ```bash
 python refscore .py -h
 ```
+
+Note that the first column of the Reference Score (i.e. the true note onset time) is used as the MIDI onset.
 
 # Results Reproduction
 

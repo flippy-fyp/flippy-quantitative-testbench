@@ -145,12 +145,6 @@ python repro.py bwv846
 Logs will indicate where artifacts are stored.
 
 Alternatively, see commands to run in `data/bwv846/script.txt`.
-# Contributing
-
-### Run unit tests
-```bash
-python -m unittest
-```
 
 # References
 
@@ -160,3 +154,14 @@ See Part II of the [project report](https://github.com/flippy-fyp/flippy-report/
 
 <!-- ### Differences from MIREX evaluation
 - Uses fourth column of alignment output to uniquely identify notes instead of an ID--hence, the fourth column is mandatory instead of optional as in MIREX -->
+
+
+# Contributing
+
+* File bugs and/or feature requests in the [GitHub repository](https://github.com/flippy/flippy-quantitative-testbench)
+* Pull requests are welcome in the [GitHub repository](https://github.com/flippy/flippy-quantitative-testbench)
+* Buy me a Coffee ☕️ via [PayPal](https://paypal.me/lhl2617)
+
+# Citing
+
+TBA.

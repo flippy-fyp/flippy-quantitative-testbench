@@ -11,6 +11,7 @@ git clone <REPO_URL> --recurse-submodules
 
 ## Setup
 - Requirements: `pip install -r requirements.txt`
+- Initialise pre-commit: `pre-commit install`
 
 # Testbench
 

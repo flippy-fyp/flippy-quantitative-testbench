@@ -19,7 +19,7 @@ def bach10():
     from utils.processfile import process_ref_file
     from utils.match import match
 
-    BACH10_PATH = os.path.join(DATA_PATH, "bach10", "Bach10_v1.1")
+    BACH10_PATH = os.path.join(DATA_PATH, "Bach10_v1.1")
     OUTPUT_PATH = os.path.join(REPRO_RESULTS_PATH, "bach10")
     os.makedirs(OUTPUT_PATH, exist_ok=True)
     BACH10_PIECE_PATHS = [
@@ -249,7 +249,7 @@ def bach10_oracle():
     OUTPUT_PATH = os.path.join(REPRO_RESULTS_PATH, repro_arg)
     os.makedirs(OUTPUT_PATH, exist_ok=True)
 
-    BACH10_PATH = os.path.join(DATA_PATH, "bach10", "Bach10_v1.1")
+    BACH10_PATH = os.path.join(DATA_PATH, "Bach10_v1.1")
     BACH10_PIECE_PATHS = [
         f.path
         for f in os.scandir(BACH10_PATH)

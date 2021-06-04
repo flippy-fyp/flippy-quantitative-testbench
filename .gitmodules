@@ -1,0 +1,3 @@
+[submodule "data/Bach10_v1.1"]
+	path = data/Bach10_v1.1
+	url = https://github.com/flippy-fyp/Bach10_v1.1

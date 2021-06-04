@@ -3,7 +3,13 @@
 (Real-time) Musical Score Audio Alignment (Score-following) Testbench and utilities.
 
 ### Requirements
-- Python 3
+- Cloned repository with all submodules
+```bash
+git clone <REPO_URL> --recurse-submodules
+```
+- Python 3 (Tested on Python 3.8, Ubuntu 20.04)
+
+## Setup
 - Requirements: `pip install -r requirements.txt`
 
 # Testbench

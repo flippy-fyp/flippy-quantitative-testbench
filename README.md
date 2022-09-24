@@ -124,7 +124,7 @@ Note that the first column of the Reference Score (i.e. the true note onset time
 
 # Results Reproduction
 
-These scripts reproduce results shown in the [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf).
+These scripts reproduce results shown in the [project report](https://arxiv.org/abs/2205.03247).
 
 To run everything:
 ```bash
@@ -151,7 +151,7 @@ Alternatively, see commands to run in `data/bwv846/script.txt`.
 
 Testbench written based on the [MIREX Score Following](https://www.music-ir.org/mirex/wiki/2006:Score_Following_Proposal) standards and [jthickstun's alignment evaluation implementation](https://github.com/jthickstun/alignment-eval).
 
-See Part II of the [project report](https://github.com/flippy-fyp/flippy-report/blob/main/main.pdf) for more information.
+See Part II of the [project report](https://arxiv.org/abs/2205.03247) for more information.
 
 <!-- ### Differences from MIREX evaluation
 - Uses fourth column of alignment output to uniquely identify notes instead of an ID--hence, the fourth column is mandatory instead of optional as in MIREX -->
@@ -163,6 +163,18 @@ See Part II of the [project report](https://github.com/flippy-fyp/flippy-report/
 * Pull requests are welcome in the [GitHub repository](https://github.com/flippy/flippy-quantitative-testbench)
 * Buy me a Coffee ☕️ via [PayPal](https://paypal.me/lhl2617)
 
-# Citing
+## Citing
 
-TBA.
+### BibTeX
+```
+@misc{https://doi.org/10.48550/arxiv.2205.03247,
+  doi = {10.48550/ARXIV.2205.03247},
+  url = {https://arxiv.org/abs/2205.03247},
+  author = {Lee, Lin Hao},
+  keywords = {Sound (cs.SD), Audio and Speech Processing (eess.AS), FOS: Computer and information sciences, FOS: Computer and information sciences, FOS: Electrical engineering, electronic engineering, information engineering, FOS: Electrical engineering, electronic engineering, information engineering},
+  title = {Musical Score Following and Audio Alignment},
+  publisher = {arXiv},
+  year = {2022},
+  copyright = {Creative Commons Attribution 4.0 International}
+}
+```

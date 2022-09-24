@@ -163,9 +163,9 @@ See Part II of the [project report](https://arxiv.org/abs/2205.03247) for more i
 * Pull requests are welcome in the [GitHub repository](https://github.com/flippy/flippy-quantitative-testbench)
 * Buy me a Coffee ☕️ via [PayPal](https://paypal.me/lhl2617)
 
-## Citing
+# Citing
 
-### BibTeX
+## BibTeX
 ```
 @misc{https://doi.org/10.48550/arxiv.2205.03247,
   doi = {10.48550/ARXIV.2205.03247},
